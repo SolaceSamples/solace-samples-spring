@@ -1,0 +1,71 @@
+
+{% for section in site.data.tutorials %}
+    <div style="margin-bottom: 25px;">
+        <h4 class="navheading"><a href="{{ site.baseurl }}/">Messaging Patterns</a></h4>
+        <ul class="navlist">
+            {% for item in section.tutorials %} {% assign item_url = item | prepend:"/" | append:"/" %} {% assign p = site.docs
+            | where:"url", item_url | first %}
+            <li class="navlink{% if item_url == page.url %}_current{% endif %}"><a href="{{ site.baseurl }}{{ p.url }}">{{ p.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endfor %}
+{% for section in site.data.tutorials %}
+    <div>
+        {% if section.features %}
+            <h4 class="navheading"><a href="{{ site.baseurl }}/">API Features</a></h4>
+        {% endif %}
+        <ul class="navlist">
+            {% for item in section.features %} {% assign item_url = item | prepend:"/" | append:"/" %} {% assign p = site.docs
+            | where:"url", item_url | first %}
+            <li class="navlink{% if item_url == page.url %}_current{% endif %}"><a href="{{ site.baseurl }}{{ p.url }}">{{ p.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endfor %}
+<div class="nav">
+    <select name="menu" onchange="top.window.location = this.value">
+        <option value="#" selected>Pick Another API</option>
+        <optgroup label="Solace APIs">
+            {% for item in site.solace-apis-cloud %}
+                <option value="{{item.value}}">{{item.name}}</option>
+            {% endfor %}
+        </optgroup>
+        <optgroup label="Open APIs & Protocols">
+            {% for item in site.open-apis-cloud %}
+                <option value="{{item.value}}">{{item.name}}</option>
+            {% endfor %}
+        </optgroup>
+        <optgroup label="Other Environments">
+            {% for item in site.other-environments-dev %}
+                <option value="{{item.value}}">{{item.name}}</option>
+            {% endfor %}
+        </optgroup>
+    </select>
+</div>
+<div class="github">
+    <div>
+        <img class="grey-image" src="{{ "/template/images/hosted-in-github.png" | prepend: site.baseurl }}" alt="hosted-in-github"
+            width="150" height="57"></img>
+    </div>
+    {% for item in page.links %}
+    <div class="github-link">
+        <img class="fork-icon" src="{{ "/template/images/github-icon.png" | prepend: site.baseurl }}"/>
+        <a href="{{ site.repository }}{{ item.link }}" target="_blank">{{ item.label }}</a> <br />
+    </div>
+    {% endfor %}
+    <div class="github-link">
+        <img src="{{ "/template/images/pencil-icon.png" | prepend: site.baseurl }}"/>
+        <a href="{{ site.repository }}/blob/master/docs/{{ page.path }}" target="_blank">Improve this page</a>
+    </div>
+    <div class="github-link">
+        <img src="{{ "/template/images/issue-icon.png" | prepend: site.baseurl }}"/>
+        <a href="{{ site.repository }}/issues/new" target="_blank">Raise an issue</a>
+    </div>
+</div>
+<!--<script>-->
+  <!--function scrollFunction() {-->
+      <!--document.querySelector("aside").style.top = this.window.scrollY + 60 + "px";-->
+  <!--}-->
+  <!--window.onscroll = scrollFunction;-->
+<!--</script>-->

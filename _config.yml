@@ -1,0 +1,14 @@
+# Site settings
+title: Solace Samples Spring
+summary: These tutorials get you up to speed sending and receiving messages with Solace technology.
+baseurl: "/solace-samples-spring" # the subpath of your site, e.g. /solace-samples-java
+repository: https://github.com/SolaceSamples/solace-samples-spring
+first_section_name: Getting Started with Spring
+second_section_name: Advanced Features with Spring
+side_nav_section1: Getting Started
+side_nav_section2: Advanced Features 
+
+# Links
+links-solaceCloud-setup: //cloud.solace.com/create-messaging-service/
+links-software-setup: //solace.com/software/getting-started/
+docs-core-concepts: //docs.solace.com/Features/Core-Concepts.htm
