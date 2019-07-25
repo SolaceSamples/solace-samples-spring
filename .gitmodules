@@ -1,0 +1,4 @@
+[submodule "template"]
+	path = template
+	url = git@github.com:SolaceSamples/jekyll-template.git
+	branch = master
