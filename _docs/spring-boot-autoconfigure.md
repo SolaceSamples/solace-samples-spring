@@ -5,9 +5,9 @@ summary: Learn how to use Spring Boot Autoconfig with JMS & Solace PubSub+
 icon: spring-boot.svg
 links:
     - label: SpringBootSender
-      link: /blob/master/src/main/java/com/solace/samples/spring/SpringBootSender.java
+      link: /blob/master/spring-boot-autoconfig-sender/src/main/java/com/solace/samples/spring/boot/SpringBootSender.java
     - label: SpringBootReceiver
-      link: /blob/master/src/main/java/com/solace/samples/spring/SpringBootReceiver.java
+      link: /blob/master/spring-boot-autoconfig-receiver/src/main/java/com/solace/samples/spring/boot/SpringBootReceiver.java
 ---
 
 This tutorial will introduce you to the fundamentals of connecting an JMS client to Solace Messaging using Spring Boot with Autoconfigure. Spring Boot auto-configuration attempts to automatically configure your Spring application based on the jar dependencies that you have added.
@@ -108,6 +108,8 @@ Also note that the dependency below is what enables us to use Solace PubSub+ as 
 
 ## Learn about the Receiver
 
+Sample code [is here](https://github.com/SolaceSamples/solace-samples-spring/tree/master/spring-boot-autoconfig-receiver) if not already imported in previous steps. 
+
 ### SpringBootReceiver.java
 Open a new console/terminal if needed. 
 Open the SpringBootReceiver.java file in the "spring-boot-autoconfig-receiver" project.
@@ -170,6 +172,8 @@ When the app is started you should see a message on the console that contains "S
 Leave the receiver running so it can receive messages sent by our Sender in the next section.
 
 ## Learn about the Sender
+
+Sample code [is here](https://github.com/SolaceSamples/solace-samples-spring/tree/master/spring-boot-autoconfig-sender) if not already imported in previous steps. 
 
 ### SpringBootSender.java
 Open a new console/terminal if needed. 
@@ -244,3 +248,5 @@ At this point you should also see the receiver receiving the messages.
 
 ## Takeaway
 Spring Boot makes it super simple to quickly develop Spring Applications. And when used with Autoconfig & Solace PubSub+ it will automatically discover your configurations & connect to the PubSub+ service! Note that you didn't have to manually create all the boilerplate JMS objects that you may be used to, such as Connection Factories, Message Producers and Sessions. This ease of use allows for consistency across your applications and the ability to focus your time on achieving business goals.
+
+Sample Code used in this tutorial can be found [in github](https://github.com/SolaceSamples/solace-samples-spring).
