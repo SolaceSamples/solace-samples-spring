@@ -5,11 +5,11 @@ summary: Learn how to use Spring Cloud Streams w/ the PubSub+ Binder
 icon: spring-cloud.svg
 links:
     - label: Source Example
-      link: /blob/master/src/main/java/com/solace/samples/spring/scs/FarhenheitTempSource.java
+      link: /blob/master/cloud-streams-source/src/main/java/com/solace/samples/spring/scs/FahrenheitTempSource.java
     - label: Sink Example
-      link: /blob/master/src/main/java/com/solace/samples/spring/scs/TemperatureSink.java
+      link: /blob/master/cloud-streams-sink/src/main/java/com/solace/samples/spring/scs/TemperatureSink.java
     - label: Processor Example
-      link: /blob/master/src/main/java/com/solace/samples/spring/scs/ConvertFtoCProcessor.java
+      link: /blob/master/cloud-streams-processor/src/main/java/com/solace/samples/spring/scs/ConvertFtoCProcessor.java
 ---
 
 This tutorial will introduce you to the fundamentals of using Spring Cloud Streams with the Solace PubSub+ Binder. You will create a Source (sending app), a Sink (receiving app), and a Processor (combination of a source & a sink). The apps will exchange events using a PubSub+ Event Broker
@@ -104,6 +104,9 @@ Also note that the dependency below is what enables us to use the Solace PubSub+
 
 
 ## Learn about the Sink
+
+Sample code [is here](https://github.com/SolaceSamples/solace-samples-spring/tree/master/cloud-streams-sink) if not already imported in previous steps. 
+
 ### TemperatureSink.java
 Open the TemperatureSink.java file in the "cloud-streams-sink" project. 
 This class shows how simple it is to write a Spring Cloud Streams app that consumes events from PubSub+.
@@ -180,6 +183,8 @@ You should see the application start; you will know it's started when the consol
 Leave the app running for the remainder of the tutorial & don't worry that no events are being received yet. 
 
 ## Learn about the Source
+
+Sample code [is here](https://github.com/SolaceSamples/solace-samples-spring/tree/master/cloud-streams-source) if not already imported in previous steps. 
 
 ### FahrenheitTempSource.java
 Open a new console/terminal if needed. 
@@ -267,6 +272,8 @@ At this point you have now implemented a sending & receiving app using Spring Cl
 Leave the app running for the remainder of the tutorial.
 
 ## Learn about the Processor 
+
+Sample code [is here](https://github.com/SolaceSamples/solace-samples-spring/tree/master/cloud-streams-processor) if not already imported in previous steps. 
 
 ### ConvertFtoCProcessor.java
 Open a new console/terminal if needed. 
@@ -365,3 +372,4 @@ Fahrenheit events are being received from the initial Source app from the "senso
 ## Takeaway
 Spring Cloud Streams makes it super simple to develop event-driven microservices & applications! Note that you did not have to learn any messaging APIs in order to use Spring Cloud Streams. It allowed you to create an entire event creation, processing and receiving chain without having to use Messaging/Eventing APIs which allows your to focus on your business goals. 
 
+Sample Code used in this tutorial can be found [in github](https://github.com/SolaceSamples/solace-samples-spring).
