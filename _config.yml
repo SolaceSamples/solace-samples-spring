@@ -9,6 +9,6 @@ side_nav_section1: Getting Started
 side_nav_section2: Advanced Features 
 
 # Links
-links-solaceCloud-setup: //cloud.solace.com/create-messaging-service/
+links-solaceCloud-setup: //solace.com/cloud/
 links-software-setup: //solace.com/software/getting-started/
 docs-core-concepts: //docs.solace.com/Features/Core-Concepts.htm
