@@ -2,7 +2,6 @@
 ## Get Solace Messaging
 
 This tutorial requires access Solace messaging and requires that you know several connectivity properties about your Solace messaging. Specifically you need to know the following:
-
 <table>
   <tr>
     <th>Resource</th>
@@ -32,7 +31,7 @@ There are several ways you can get access to Solace Messaging and find these req
 
 * Follow [these instructions]({{ site.links-solaceCloud-setup }}){:target="_top"} to quickly spin up a cloud-based Solace messaging service for your applications.
 * The messaging connectivity information is found in the service details in the connectivity tab (shown below). You will need:
-    * Host:Port (use the MQTT URI)
+    * Host:Port (use Connection Details from the "Solace Messaging" option)
     * Client Username
     * Client Password
 
