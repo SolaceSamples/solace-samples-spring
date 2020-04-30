@@ -1,8 +1,12 @@
 spring:
   cloud:
+    function:
+      definition: emitSensorReading
     stream:
+      poller:
+        fixedDelay: 5000
       bindings:
-        output:
+        emitSensorReading-out-0:
           destination: sensor/temperature/fahrenheit
           binder: local_solace
       binders:
@@ -22,6 +26,3 @@ logging:
     root: INFO
     com.solacesystems.jcsmp: INFO
     org.springframework: INFO
-
-server:
-  port: 8095

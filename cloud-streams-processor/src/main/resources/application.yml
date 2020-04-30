@@ -1,12 +1,14 @@
 spring:
   cloud:
+    function:
+      definition: convertFtoC
     stream:
       default-binder: local_solace
       bindings:
-        input:
+        convertFtoC-in-0:
           destination: TEMPS.Q
           group: PROCESSOR
-        output:
+        convertFtoC-out-0:
           destination: sensor/temperature/celsius
       binders:
         local_solace:
@@ -22,7 +24,7 @@ spring:
                 reconnectRetries: -1
       solace:
         bindings:
-          input:
+          convertFtoC-in-0:
             consumer:
               queueAdditionalSubscriptions: sensor/temperature/fahrenheit
 logging:

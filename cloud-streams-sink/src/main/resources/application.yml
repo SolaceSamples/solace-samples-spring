@@ -1,8 +1,10 @@
 spring:
   cloud:
+    function:
+      definition: sink
     stream:
       bindings:
-        input:
+        sink-in-0:
           destination: TEMPS.Q
           #The presence of "group" tells the binder to follow the "consumer group" pattern
           group: SINK
@@ -18,7 +20,7 @@ spring:
                 clientPassword: default
       solace:
         bindings:
-          input:
+          sink-in-0:
             consumer:
               queueAdditionalSubscriptions: sensor/temperature/>
                 

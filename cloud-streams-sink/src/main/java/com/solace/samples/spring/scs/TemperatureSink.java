@@ -19,28 +19,23 @@
 
 package com.solace.samples.spring.scs;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.function.Consumer;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.cloud.stream.messaging.Sink;
+import org.springframework.context.annotation.Bean;
 
 import com.solace.samples.spring.common.SensorReading;
 
 @SpringBootApplication
-@EnableBinding(Sink.class)
 public class TemperatureSink {
-	private static final Logger log = LoggerFactory.getLogger(TemperatureSink.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(TemperatureSink.class, args);
 	}
 
-	// We define an INPUT to receive from
-	@StreamListener(Sink.INPUT)
-	public void sink(SensorReading reading) {
-		log.info("Received: " + reading);
+	@Bean
+	public Consumer<SensorReading> sink(){
+		return System.out::println;
 	}
 }

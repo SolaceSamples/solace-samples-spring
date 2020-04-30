@@ -21,46 +21,43 @@ package com.solace.samples.spring.scs;
 
 import java.util.Random;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Source;
-import org.springframework.integration.annotation.InboundChannelAdapter;
-import org.springframework.integration.annotation.Poller;
+import org.springframework.context.annotation.Bean;
 
 import com.solace.samples.spring.common.SensorReading;
 import com.solace.samples.spring.common.SensorReading.BaseUnit;
 
 @SpringBootApplication
-@EnableBinding(Source.class)
 public class FahrenheitTempSource {
 	private static final Logger log = LoggerFactory.getLogger(FahrenheitTempSource.class);
 
-    private static final UUID sensorIdentifier = UUID.randomUUID();
-    private static final Random random = new Random(System.currentTimeMillis());
-    private static final int RANDOM_MULTIPLIER = 100;
-    
+	private static final UUID sensorIdentifier = UUID.randomUUID();
+	private static final Random random = new Random(System.currentTimeMillis());
+	private static final int RANDOM_MULTIPLIER = 100;
 
-        public static void main(String[] args) {
-                SpringApplication.run(FahrenheitTempSource.class, args);
-        }
+	public static void main(String[] args) {
+		SpringApplication.run(FahrenheitTempSource.class);
+	}
 
-    @InboundChannelAdapter(channel = Source.OUTPUT, poller = @Poller(fixedRate = "5000"))
-    public SensorReading emitSensorReading() {
-        double temperature = random.nextDouble() * RANDOM_MULTIPLIER;
+	@Bean
+	public Supplier<SensorReading> emitSensorReading() {
+		return () -> {
+			double temperature = random.nextDouble() * RANDOM_MULTIPLIER;
 
-        SensorReading reading = new SensorReading();
-        reading.setSensorID(sensorIdentifier.toString());
-        reading.setTemperature(temperature);
-        reading.setBaseUnit(BaseUnit.FAHRENHEIT);
-        
-        log.info("Emitting " + reading);
+			SensorReading reading = new SensorReading();
+			reading.setSensorID(sensorIdentifier.toString());
+			reading.setTemperature(temperature);
+			reading.setBaseUnit(BaseUnit.FAHRENHEIT);
 
-        return reading;
-    }
+			log.info("Emitting " + reading);
+
+			return reading;
+		};
+	}
 
 }
-
