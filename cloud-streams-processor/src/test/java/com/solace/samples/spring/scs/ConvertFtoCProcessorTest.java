@@ -30,9 +30,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
+import org.springframework.context.ApplicationContext;
+import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -43,11 +45,11 @@ import com.solace.samples.spring.common.SensorReading.BaseUnit;
 @SpringBootTest
 public class ConvertFtoCProcessorTest {
 	
-	@Autowired 
-	private Processor processor;
-	
 	@Autowired
 	private MessageCollector collector;
+	
+	@Autowired
+	private ApplicationContext context;
 
 	@Test
 	public void testFeaturesProcessor() throws InterruptedException {
@@ -56,10 +58,16 @@ public class ConvertFtoCProcessorTest {
 		SensorReading reading = new SensorReading("test", temperature, BaseUnit.FAHRENHEIT);
 		Message<SensorReading> msgInput = MessageBuilder.withPayload(reading).build();
 
-		assertNotNull(msgInput.toString());
-		processor.input().send(msgInput);
+		BeanFactoryChannelResolver channelResolver = context.getBean("integrationChannelResolver",
+				BeanFactoryChannelResolver.class);
+		MessageChannel input = channelResolver.resolveDestination("convertFtoC-in-0");
+		MessageChannel output = channelResolver.resolveDestination("convertFtoC-out-0");
 		
-		Message<?> msgOutput = (Message<?>) collector.forChannel(processor.output()).poll(5, TimeUnit.SECONDS);
+		assertNotNull(msgInput.toString());
+		input.send(msgInput);
+		
+		
+		Message<?> msgOutput = (Message<?>) collector.forChannel(output).poll(5, TimeUnit.SECONDS);
 		String payload = (msgOutput != null) ? (String) msgOutput.getPayload() : null;
 		
 		assertNotNull(payload);

@@ -23,7 +23,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.stream.messaging.Sink;
+import org.springframework.context.ApplicationContext;
+import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -35,11 +37,14 @@ import com.solace.samples.spring.common.SensorReading.BaseUnit;
 public class TemperatureSinkTest {
 
 	@Autowired
-	private Sink sink;
+	private ApplicationContext context;
 
 	@Test
 	public void testSink() {
-		sink.input().send(MessageBuilder.withPayload(new SensorReading("test", 50, BaseUnit.FAHRENHEIT)).build());
+		BeanFactoryChannelResolver channelResolver = context.getBean("integrationChannelResolver",
+				BeanFactoryChannelResolver.class);
+		MessageChannel channel = channelResolver.resolveDestination("sink-in-0");
+		channel.send(MessageBuilder.withPayload(new SensorReading("test", 50, BaseUnit.FAHRENHEIT)).build());
 	}
 
 }
