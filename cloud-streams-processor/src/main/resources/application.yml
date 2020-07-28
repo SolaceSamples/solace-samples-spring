@@ -3,7 +3,7 @@ spring:
     function:
       definition: convertFtoC
     stream:
-      default-binder: local_solace
+      default-binder: local-solace
       bindings:
         convertFtoC-in-0:
           destination: TEMPS.Q
@@ -11,7 +11,7 @@ spring:
         convertFtoC-out-0:
           destination: sensor/temperature/celsius
       binders:
-        local_solace:
+        local-solace:
           type: solace
           environment:
             solace:

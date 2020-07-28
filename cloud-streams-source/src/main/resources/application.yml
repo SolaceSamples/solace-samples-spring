@@ -4,13 +4,13 @@ spring:
       definition: emitSensorReading
     stream:
       poller:
-        fixedDelay: 5000
+        fixed-delay: 5000
       bindings:
         emitSensorReading-out-0:
           destination: sensor/temperature/fahrenheit
-          binder: local_solace
+          binder: local-solace
       binders:
-        local_solace:
+        local-solace:
           type: solace
           environment:
             solace:

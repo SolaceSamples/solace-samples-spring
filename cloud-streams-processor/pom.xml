@@ -14,13 +14,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.4.RELEASE</version>
+		<version>2.3.2.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
-		<spring-cloud.version>Hoxton.SR3</spring-cloud.version>
-		<solace-spring-cloud-bom.version>1.0.0</solace-spring-cloud-bom.version>
+		<spring-cloud.version>Hoxton.SR6</spring-cloud.version>
+		<solace-spring-cloud-bom.version>1.1.0</solace-spring-cloud-bom.version>
 	</properties>
 
 	<dependencyManagement>

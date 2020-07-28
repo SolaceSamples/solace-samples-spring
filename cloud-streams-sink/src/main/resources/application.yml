@@ -8,8 +8,11 @@ spring:
           destination: TEMPS.Q
           #The presence of "group" tells the binder to follow the "consumer group" pattern
           group: SINK
+          consumer:
+            #Concurrency can be used with a consumer group (non-exclusive queue) to process events in multiple threads
+            concurrency: 5
       binders:
-        local_solace:
+        local-solace:
           type: solace
           environment:
             solace:
@@ -22,6 +25,7 @@ spring:
         bindings:
           sink-in-0:
             consumer:
+              #This adds a topic subscription w/ wildcards to the queue created with a name of TEMPS.Q.SINK above 
               queueAdditionalSubscriptions: sensor/temperature/>
                 
 logging:

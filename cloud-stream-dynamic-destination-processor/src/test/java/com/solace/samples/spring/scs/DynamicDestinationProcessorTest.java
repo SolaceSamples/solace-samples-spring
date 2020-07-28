@@ -19,28 +19,14 @@
 
 package com.solace.samples.spring.scs;
 
-import java.util.function.Consumer;
+import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
-import com.solace.samples.spring.common.SensorReading;
+@SpringBootTest
+public class DynamicDestinationProcessorTest {
 
-@SpringBootApplication
-public class TemperatureSink {
-
-	public static void main(String[] args) {
-		SpringApplication.run(TemperatureSink.class, args);
-	}
-
-	/*
-	 *  Check out application.yml to see how to
-	 *  1. Use `concurrency` for multi-threaded consumption
-	 *  2. Use wildcard subscriptions
-	 */
-	@Bean
-	public Consumer<SensorReading> sink(){
-		return System.out::println;
+	@Test
+	void contextLoads() {
 	}
 }

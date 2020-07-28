@@ -44,6 +44,10 @@ public class FahrenheitTempSource {
 		SpringApplication.run(FahrenheitTempSource.class);
 	}
 
+	/* 
+	 * Basic Supplier which sends messages every X milliseconds
+	 * Configurable using spring.cloud.stream.poller.fixed-delay 
+	 */
 	@Bean
 	public Supplier<SensorReading> emitSensorReading() {
 		return () -> {

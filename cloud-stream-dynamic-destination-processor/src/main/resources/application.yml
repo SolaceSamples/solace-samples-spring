@@ -1,0 +1,46 @@
+spring:
+  cloud:
+    stream:
+      function:
+        definition: functionUsingTargetDestHeader;functionUsingStreamBridge;supplierTargetDestination;supplierStreamBridge;receiveAll
+      #Sets the cache size when using StreamBridge
+      dynamic-destination-cache-size: 10
+      bindings:
+        functionUsingTargetDestHeader-in-0:
+          destination: topic/in/targetdestination
+        functionUsingTargetDestHeader-out-0:
+          destination: default
+        functionUsingStreamBridge-in-0:
+          destination: topic/in/streambridge
+        #BINDINGS BELOW ARE FOR TEST FUNCTIONS
+        supplierTargetDestination-out-0:
+          destination: topic/in/targetdestination
+        supplierStreamBridge-out-0:
+          destination: topic/in/streambridge
+        receiveAll-in-0:
+          destination: queue  
+      solace:
+        bindings:
+          receiveAll-in-0:
+            consumer:
+             queueAdditionalSubscriptions: pub/sub/plus/>
+      binders:
+        local-solace:
+          type: solace
+          environment:
+            solace:
+              java:
+                host: tcp://localhost:55555
+                msgVpn: default
+                clientUsername: default
+                clientPassword: default
+                connectRetries: -1
+                reconnectRetries: -1
+logging:
+  level:
+    root: INFO
+    com.solacesystems.jcsmp: INFO
+    org.springframework: INFO
+    
+server:
+  port: 8082
