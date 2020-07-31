@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.stream.binder.BinderHeaders;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.Message;
@@ -47,7 +48,7 @@ public class DynamicDestinationProcessor {
 	 * Dynamic Topic Publish OPTION 1: Using scst_targetDestination header; works
 	 * with any binder that supports the header, including Solace.
 	 * 
-	 * Note that the `scst_targetDestination` header is essentially telling the
+	 * Note that the BinderHeaders.TARGET_DESTINATION header is essentially telling the
 	 * binder to override the default destination specified on a binding and if the
 	 * header is NOT set then the message would be sent to the default destination.
 	 */
@@ -57,7 +58,7 @@ public class DynamicDestinationProcessor {
 			String topic = getMyTopicUsingLogic(input.getPayload());
 			log.info("Processing message: " + input.getPayload());
 			String payload = input.getPayload().concat(" Processed by functionUsingTargetDestHeader");
-			return MessageBuilder.withPayload(payload).setHeader("scst_targetDestination", topic).build();
+			return MessageBuilder.withPayload(payload).setHeader(BinderHeaders.TARGET_DESTINATION, topic).build();
 		};
 	}
 
