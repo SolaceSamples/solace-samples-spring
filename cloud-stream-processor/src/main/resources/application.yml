@@ -1,0 +1,37 @@
+spring:
+  cloud:
+    function:
+      definition: convertFtoC
+    stream:
+      default-binder: local-solace
+      bindings:
+        convertFtoC-in-0:
+          destination: TEMPS.Q
+          group: PROCESSOR
+        convertFtoC-out-0:
+          destination: sensor/temperature/celsius
+      binders:
+        local-solace:
+          type: solace
+          environment:
+            solace:
+              java:
+                host: tcp://localhost:55555
+                msgVpn: default
+                clientUsername: default
+                clientPassword: default
+                connectRetries: -1
+                reconnectRetries: -1
+      solace:
+        bindings:
+          convertFtoC-in-0:
+            consumer:
+              queueAdditionalSubscriptions: sensor/temperature/fahrenheit
+logging:
+  level:
+    root: INFO
+    com.solacesystems.jcsmp: INFO
+    org.springframework: INFO
+    
+server:
+  port: 8094

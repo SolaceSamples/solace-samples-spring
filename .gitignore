@@ -10,5 +10,6 @@ docs/_site
 .classpath
 .project
 .settings
+.factorypath
 build/
 .idea
