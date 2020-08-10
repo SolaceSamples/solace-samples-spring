@@ -1,18 +1,18 @@
 ---
 layout: tutorials
-title: Spring Cloud Streams
-summary: Learn how to use Spring Cloud Streams w/ the PubSub+ Binder
+title: Spring Cloud Stream
+summary: Learn how to use Spring Cloud Stream w/ the PubSub+ Binder
 icon: spring-cloud.svg
 links:
     - label: Source Example
-      link: /blob/master/cloud-streams-source/src/main/java/com/solace/samples/spring/scs/FahrenheitTempSource.java
+      link: /blob/master/cloud-stream-source/src/main/java/com/solace/samples/spring/scs/FahrenheitTempSource.java
     - label: Sink Example
-      link: /blob/master/cloud-streams-sink/src/main/java/com/solace/samples/spring/scs/TemperatureSink.java
+      link: /blob/master/cloud-stream-sink/src/main/java/com/solace/samples/spring/scs/TemperatureSink.java
     - label: Processor Example
-      link: /blob/master/cloud-streams-processor/src/main/java/com/solace/samples/spring/scs/ConvertFtoCProcessor.java
+      link: /blob/master/cloud-stream-processor/src/main/java/com/solace/samples/spring/scs/ConvertFtoCProcessor.java
 ---
 
-This tutorial will introduce you to the fundamentals of using Spring Cloud Streams with the Solace PubSub+ Binder. You will create a Source (sending app), a Sink (receiving app), and a Processor (combination of a source & a sink). The apps will exchange events using a PubSub+ Event Broker
+This tutorial will introduce you to the fundamentals of using Spring Cloud Stream with the Solace PubSub+ Binder. You will create a Source (sending app), a Sink (receiving app), and a Processor (combination of a source & a sink). The apps will exchange events using a PubSub+ Event Broker
 
 ## Assumptions
 
@@ -29,17 +29,17 @@ One simple way to get access to Solace messaging quickly is to create a messagin
 
 ## Goals
 
-The goal of this tutorial is to demonstrate the use of Spring Cloud Streams with the Solace PubSub+ Binder. This tutorial will show you:
+The goal of this tutorial is to demonstrate the use of Spring Cloud Stream with the Solace PubSub+ Binder. This tutorial will show you:
 
-*   How to create a Spring Cloud Streams Source (sending app) to send events into PubSub+
-*   How to create a Spring Cloud Streams Sink (receiving app) to receive events from PubSub+
-*   How to create a Spring Cloud Streams Processor (sending & receiving app) to process events using PubSub+
+*   How to create a Spring Cloud Stream Source (sending app) to send events into PubSub+
+*   How to create a Spring Cloud Stream Sink (receiving app) to receive events from PubSub+
+*   How to create a Spring Cloud Stream Processor (sending & receiving app) to process events using PubSub+
 
-## Spring Cloud Streams (SCS) Introduction
+## Spring Cloud Stream (SCS) Introduction
 
 “Spring Cloud Stream is a framework for building highly scalable event-driven microservices connected with shared messaging systems."
 It is based on Spring Boot, Spring Cloud, Spring Integration and Spring Messaging
-Solace PubSub+ is a partner maintained binder implementation for Spring Cloud Streams. 
+Solace PubSub+ is a partner maintained binder implementation for Spring Cloud Stream. 
 1. Spring Cloud Stream Project Home: [https://spring.io/projects/spring-cloud-stream](https://spring.io/projects/spring-cloud-stream){:target="_blank"}
 2. The Reference Guide for that current version is available [here](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle){:target="_blank"}
 3. PubSub+ Binder [https://github.com/SolaceProducts/spring-cloud-stream-binder-solace](https://github.com/SolaceProducts/spring-cloud-stream-binder-solace){:target="_blank"}
@@ -58,9 +58,9 @@ cd {{ site.repository | split: "/" | last }}
 ## Project Setup
 You should now be in a directory that itself contains multiple directories. 
 The following 4 will be used in this tutorial: 
-* cloud-streams-processor
-* cloud-streams-sink
-* cloud-streams-source
+* cloud-stream-processor
+* cloud-stream-sink
+* cloud-stream-source
 * spring-samples-datamodel
 
 The following sections will run the apps from the command line, but if you prefer to use an IDE the projects can be imported as "Maven Projects" 
@@ -74,10 +74,10 @@ mvn clean install
 ```
 
 ### Analyze the Maven Dependencies
-Using your favorite text editor open the cloud-streams-sink/pom.xml file
+Using your favorite text editor open the cloud-stream-sink/pom.xml file
 
 ```
-cd cloud-streams-sink
+cd cloud-stream-sink
 vim pom.xml
 ```
 
@@ -105,15 +105,15 @@ Also note that the dependency below is what enables us to use the Solace PubSub+
 
 ## Learn about the Sink
 
-Sample code [is here](https://github.com/SolaceSamples/solace-samples-spring/tree/master/cloud-streams-sink) if not already imported in previous steps. 
+Sample code [is here](https://github.com/SolaceSamples/solace-samples-spring/tree/master/cloud-stream-sink) if not already imported in previous steps. 
 
 ### TemperatureSink.java
-Open the TemperatureSink.java file in the "cloud-streams-sink" project. 
-This class shows how simple it is to write a Spring Cloud Streams app that consumes events from PubSub+.
+Open the TemperatureSink.java file in the "cloud-stream-sink" project. 
+This class shows how simple it is to write a Spring Cloud Stream app that consumes events from PubSub+.
 
 A few things to take note of: 
 * The [@SpringBootApplication](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-using-springbootapplication-annotation.html) annotation enables auto-configuration and component scanning
-* The @EnableBinding(Sink.class) annotation tells us that we are creating a Spring Cloud Streams Sink application and enables the Input channel on the Sink binding interface. This Sink's input channel will connect to our messaging system at run time.
+* The @EnableBinding(Sink.class) annotation tells us that we are creating a Spring Cloud Stream Sink application and enables the Input channel on the Sink binding interface. This Sink's input channel will connect to our messaging system at run time.
 * The @StreamListener annotation defines which method should be invoked when an event is received on our Sink.INPUT channel. 
 
 ``` java
@@ -136,12 +136,12 @@ public class TemperatureSink {
 
 ### Sink:application.yml
 Next let's take a look at the application.yml file. Note that an application.properties file could be used instead. 
-Open the application.yml file in the "cloud-streams-sink" project.
+Open the application.yml file in the "cloud-stream-sink" project.
 
 A few things to take note of: 
 * The spring.cloud.stream.bindings.input maps to the Sink.INPUT channel for our application. 
-* Because a "group" is specified we are following the Spring Cloud Streams "Consumer Group" pattern; if a group was not specified the app would be using the Publish-Subscribe pattern. 
-* Spring Cloud Streams will use the "local_solace" binder since it's the only one present; if multiple binders are present you can specify the binder on each binding. 
+* Because a "group" is specified we are following the Spring Cloud Stream "Consumer Group" pattern; if a group was not specified the app would be using the Publish-Subscribe pattern. 
+* Spring Cloud Stream will use the "local_solace" binder since it's the only one present; if multiple binders are present you can specify the binder on each binding. 
 * Change your *host*, *msgVpn*, *clientUsername* & *clientPassword* to match your Solace Messaging Service. The host should be your "SMF URI".
 * Notice the spring.cloud.steams.solace.bindings is where Solace specific configurations can be set; here we see an example where we are telling our queue to subscribe to the "sensor/temperature/>" topic. The ">" sign is a wildcard that allows us to receive any events sent to any topic that starts with "sensor/temperature/" We will be using it to receive events on "sensor/temperature/celsius" and "sensor/temperature/fahrenheit" topics.
 
@@ -184,17 +184,17 @@ Leave the app running for the remainder of the tutorial & don't worry that no ev
 
 ## Learn about the Source
 
-Sample code [is here](https://github.com/SolaceSamples/solace-samples-spring/tree/master/cloud-streams-source) if not already imported in previous steps. 
+Sample code [is here](https://github.com/SolaceSamples/solace-samples-spring/tree/master/cloud-stream-source) if not already imported in previous steps. 
 
 ### FahrenheitTempSource.java
 Open a new console/terminal if needed. 
-Open the FahrenheitTempSource.java file in the "cloud-streams-source" project. 
-This class shows how simple it is to write a Spring Cloud Streams app that sends events to PubSub+.
+Open the FahrenheitTempSource.java file in the "cloud-stream-source" project. 
+This class shows how simple it is to write a Spring Cloud Stream app that sends events to PubSub+.
 The class is simulating an event source that emits a temperature, in Fahrenheit, every 5 seconds. 
 
 A few things to take note of: 
 * As before the [@SpringBootApplication](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-using-springbootapplication-annotation.html) annotation enables auto-configuration and component scanning
-* The @EnableBinding(Source.class) annotation tells us that we are creating a Spring Cloud Streams Source application and enables the Output channel on the Source binding interface. This Source's output channel will connect to our messaging system at run time.
+* The @EnableBinding(Source.class) annotation tells us that we are creating a Spring Cloud Stream Source application and enables the Output channel on the Source binding interface. This Source's output channel will connect to our messaging system at run time.
 * The @InboundChannelAdapter annotation defines which method will be using the Source.OUTPUT channel. It is also enabling us to send a SensorReading event every 5 seconds. 
 
 ``` java
@@ -229,11 +229,11 @@ public class FahrenheitTempSource {
 
 ### Source:application.yml
 Next let's take a look at the application.yml file. As stated earlier, an application.properties file could be used instead. 
-Open the application.yml file in the "cloud-streams-source" project.
+Open the application.yml file in the "cloud-stream-source" project.
 
 A few things to take note of: 
 * The spring.cloud.stream.bindings.output maps to the Source.OUTPUT channel for our application; in this example we are sending to the "sensor/temperature/fahrenheit" topic. 
-* Spring Cloud Streams will use the "local_solace" binder since it's the only one present; if multiple binders are present you can specify the binder on each binding. 
+* Spring Cloud Stream will use the "local_solace" binder since it's the only one present; if multiple binders are present you can specify the binder on each binding. 
 * Change your *host*, *msgVpn*, *clientUsername* & *clientPassword* to match your Solace Messaging Service. The host should be your "SMF URI".
 
 ``` yaml
@@ -268,22 +268,22 @@ You should see the application start; you will know it's started when the consol
 After starting you should see the Source app emitting an event every 5 seconds. 
 Note that if you look back at your Sink app that was deployed previously you should now see it receiving the events that are being emitted. 
 
-At this point you have now implemented a sending & receiving app using Spring Cloud Streams and PubSub+ !!
+At this point you have now implemented a sending & receiving app using Spring Cloud Stream and PubSub+ !!
 Leave the app running for the remainder of the tutorial.
 
 ## Learn about the Processor 
 
-Sample code [is here](https://github.com/SolaceSamples/solace-samples-spring/tree/master/cloud-streams-processor) if not already imported in previous steps. 
+Sample code [is here](https://github.com/SolaceSamples/solace-samples-spring/tree/master/cloud-stream-processor) if not already imported in previous steps. 
 
 ### ConvertFtoCProcessor.java
 Open a new console/terminal if needed. 
-Open the ConvertFtoCProcessor.java file in the "cloud-streams-processor" project. 
-This class shows how simple it is to write a Spring Cloud Streams app that receives, processesses & sends to PubSub+.
+Open the ConvertFtoCProcessor.java file in the "cloud-stream-processor" project. 
+This class shows how simple it is to write a Spring Cloud Stream app that receives, processesses & sends to PubSub+.
 The class is a processor which receives SensorReadings in Fahrenheit from one topic, converts them to Celsius and publishes the updated SensorReadings to a Celsius topic
 
 A few things to take note of: 
 * As before the [@SpringBootApplication](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-using-springbootapplication-annotation.html) annotation enables auto-configuration and component scanning
-* The @EnableBinding(Processor.class) annotation tells us that we are creating a Spring Cloud Streams Processor application and enables the Input & Output channels on the Processor binding interface. This Prcoessor's input & output channels will be bound to our messaging system at run time.
+* The @EnableBinding(Processor.class) annotation tells us that we are creating a Spring Cloud Stream Processor application and enables the Input & Output channels on the Processor binding interface. This Prcoessor's input & output channels will be bound to our messaging system at run time.
 * The @StreamListener annotation defines which method should be invoked when an event is received on our Processor.INPUT channel. 
 * The @SendTo annotation defines that returned objects from the method should be sent to the Processor.OUTPUT channel. 
 
@@ -316,11 +316,11 @@ public class ConvertFtoCProcessor {
 
 ### Processor:application.yml
 Next let's take a look at the application.yml file. As stated earlier, an application.properties file could be used instead. 
-Open the application.yml file in the "cloud-streams-processor" project.
+Open the application.yml file in the "cloud-stream-processor" project.
 
 A few things to take note of: 
 * The spring.cloud.stream.bindings now includes both an "input" and an "output" binding. These maps to our Processor.INPUT & Processor.OUTPUT channels respectively; note that our output destination will be sending to the "sensor/temperature/celsius" topic. 
-* Spring Cloud Streams will use the "local_solace" binder since it's the only one present; if multiple binders are present you can specify the binder on each binding. 
+* Spring Cloud Stream will use the "local_solace" binder since it's the only one present; if multiple binders are present you can specify the binder on each binding. 
 * Change your *host*, *msgVpn*, *clientUsername* & *clientPassword* to match your Solace Messaging Service. The host should be your "SMF URI".
 * Notice the spring.cloud.steams.solace.bindings is where Solace specific configurations can be set; here we see an example where we are telling our input bindings queue to subscribe to the "sensor/temperature/fahrenheit" topic.
 
@@ -370,6 +370,6 @@ Fahrenheit events are being received from the initial Source app from the "senso
 
 
 ## Takeaway
-Spring Cloud Streams makes it super simple to develop event-driven microservices & applications! Note that you did not have to learn any messaging APIs in order to use Spring Cloud Streams. It allowed you to create an entire event creation, processing and receiving chain without having to use Messaging/Eventing APIs which allows your to focus on your business goals. 
+Spring Cloud Stream makes it super simple to develop event-driven microservices & applications! Note that you did not have to learn any messaging APIs in order to use Spring Cloud Stream. It allowed you to create an entire event creation, processing and receiving chain without having to use Messaging/Eventing APIs which allows your to focus on your business goals. 
 
 Sample Code used in this tutorial can be found [in github](https://github.com/SolaceSamples/solace-samples-spring).

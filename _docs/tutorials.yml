@@ -1,6 +1,6 @@
 - title: Spring Tutorials
   tutorials:
-  - spring-cloud-streams
+  - spring-cloud-stream
   - spring-boot-autoconfigure
 
   features:
