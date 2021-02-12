@@ -11,10 +11,8 @@ The Spring Framework is an application framework and inversion of control contai
 
 At Solace we support integrating our PubSub+ Event Broker with Spring in several different ways to promote the ease of building event driven applications. This repository contains code samples for doing so, but it's best to clone the repo and then follow the step by step tutorials here: [tutorials home page](https://solace.com/samples/solace-samples-spring/)
 * Spring Boot Autoconfigure
-* Spring Cloud Streams
+* Spring Cloud Stream
 * Spring Integration (JMS) [Coming soon!]
-* Spring Integration (MQTT) [Coming soon!]
-* Spring Cloud Data Flow [Coming soon!]
 
 ## Access a PubSub+ Service
 
