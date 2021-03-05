@@ -65,6 +65,7 @@ This project is licensed under the Apache License, Version 2.0. - See the [LICEN
 
 For more information try these resources:
 
+- [Tutorials](https://tutorials.solace.dev/)
 - The Solace Developer Portal website at: [Developer Portal](http://solace.com/developers)
 - Check out the [Solace blog](https://solace.com/blog/category/developers/) for other interesting discussions around Solace technology
 - Follow our Developer Advocates on Twitter for development tips & to keep up with the latest Solace news! [@SolaceDevs](https://twitter.com/solacedevs)
