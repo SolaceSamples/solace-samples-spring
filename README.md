@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/SolaceSamples/solace-samples-spring.svg?branch=master)](https://travis-ci.org/SolaceSamples/solace-samples-spring)
-
 ## Spring Overview
 
 The Spring Framework is an application framework and inversion of control container for the Java platform. Dating back to the early 2000s the Spring ecosystem has grown tremendously and has become the most popular framework for Enterprise Java Developers. 
