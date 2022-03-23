@@ -46,6 +46,11 @@ public class TemperatureSink {
 		return System.out::println;
 	}
 	
+	/*
+	 * Spring Cloud Stream exposes a mechanism to define and register additional MessageConverters. 
+	 * To use it, implement org.springframework.messaging.converter.MessageConverter, and configure it as a @Bean 
+	 * It is then appended to the existing stack of `MessageConverter`s.
+	 */
     @Bean
     public MessageConverter customMessageConverter() {
         return new NullSensorReadingConverter();

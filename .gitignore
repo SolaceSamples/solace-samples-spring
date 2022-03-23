@@ -13,3 +13,5 @@ docs/_site
 .factorypath
 build/
 .idea
+/.metadata/
+bin/
