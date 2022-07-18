@@ -5,10 +5,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.solace.samples.spring.scs</groupId>
-	<artifactId>cloud-streams-sink</artifactId>
+	<artifactId>cloud-stream-sink</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>cloud-streams-sink</name>
+	<name>cloud-stream-sink</name>
 	<description>Sample sink for Spring Cloud Stream using Solace PubSub+ binder</description>
 
 	<parent>

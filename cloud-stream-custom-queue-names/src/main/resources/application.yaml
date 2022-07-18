@@ -1,0 +1,48 @@
+spring:
+  cloud:
+    function:
+      definition: uppercase
+    stream:
+      bindings:
+        uppercase-in-0:
+          destination: manualackqueue
+          binder: solace-broker
+          group: myconsumergroup
+          consumer:
+            concurrency: 1
+        uppercase-out-0:
+          destination: uppercase/topic
+          binder: solace-broker
+      binders:
+        solace-broker:
+          type: solace
+          environment:
+            solace:
+              java:
+                host: 'tcp://localhost:55554'
+                msgVpn: default
+                clientUsername: default
+                clientPassword: default
+                connectRetries: -1
+                reconnectRetries: -1
+      solace:
+        bindings:
+          uppercase-in-0:
+            consumer:
+              provisionDurableQueue: true
+              addDestinationAsSubscriptionToQueue: true
+              useGroupNameInQueueName: true
+              useDestinationEncodingInQueueName: false
+              queueNamePrefix: QNAME
+              queueNameExpression: >-
+                'CUSTOM-' + (properties.solace.queueNamePrefix?.trim()?.length() > 0 ? properties.solace.queueNamePrefix.trim() + '-' : '') +
+                (properties.solace.useFamiliarityInQueueName ? (isAnonymous ?
+                'an' : 'wk') + '-' : '') + (isAnonymous ? group?.trim() + '-' :
+                (properties.solace.useGroupNameInQueueName ? group?.trim() + '-'
+                : '')) + (properties.solace.useDestinationEncodingInQueueName ?
+                'plain' + '-' : '') + destination.trim().replaceAll('[*>]', '-')
+              errorQueueNameExpression: '''ERROR-QNAME-'' + destination.trim().replaceAll(''[*>]'', ''-'')'
+              provisionErrorQueue: true
+              autoBindErrorQueue: true
+server:
+  port: 8096

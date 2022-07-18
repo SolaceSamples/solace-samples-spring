@@ -1,0 +1,25 @@
+spring:
+  cloud:
+    function:
+      definition: batchPublish
+    stream:
+      bindings:
+        batchPublish-in-0:
+          destination: 'batch/publish/trigger'
+          group: batch
+        batchPublish-out-0:
+          destination: 'batch/consume/topic'
+      binders:
+        solace-broker:
+          type: solace
+          environment:
+            solace: # (1)
+              java:
+                host: tcp://localhost:55554
+                msgVpn: default
+                clientUsername: default
+                clientPassword: default
+                connectRetries: -1
+                reconnectRetries: -1
+server:
+  port: 8096
