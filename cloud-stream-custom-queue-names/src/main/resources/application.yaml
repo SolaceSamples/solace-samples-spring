@@ -1,7 +1,7 @@
 spring:
   cloud:
     function:
-      definition: uppercase
+      definition: uppercase;lowercase
     stream:
       bindings:
         uppercase-in-0:
@@ -13,6 +13,12 @@ spring:
         uppercase-out-0:
           destination: uppercase/topic
           binder: solace-broker
+        lowercase-in-0:
+          destination: lowercase/topic
+          binder: solace-broker
+          group: myconsumergroup
+          consumer:
+            concurrency: 1
       binders:
         solace-broker:
           type: solace
@@ -34,6 +40,7 @@ spring:
               useGroupNameInQueueName: true
               useDestinationEncodingInQueueName: false
               queueNamePrefix: QNAME
+              # The queue name will be: CUSTOM-QNAME-wk-myconsumergroup-manualackqueue
               queueNameExpression: >-
                 'CUSTOM-' + (properties.solace.queueNamePrefix?.trim()?.length() > 0 ? properties.solace.queueNamePrefix.trim() + '-' : '') +
                 (properties.solace.useFamiliarityInQueueName ? (isAnonymous ?
@@ -41,8 +48,13 @@ spring:
                 (properties.solace.useGroupNameInQueueName ? group?.trim() + '-'
                 : '')) + (properties.solace.useDestinationEncodingInQueueName ?
                 'plain' + '-' : '') + destination.trim().replaceAll('[*>]', '-')
+              # The queue name will be: ERROR-QNAME-manualackqueue
               errorQueueNameExpression: '''ERROR-QNAME-'' + destination.trim().replaceAll(''[*>]'', ''-'')'
               provisionErrorQueue: true
               autoBindErrorQueue: true
+          lowercase-in-0:
+            consumer:
+              provisionDurableQueue: true
+              queueNameExpression: '''solace/just/a/literal/queuename'''
 server:
   port: 8096
