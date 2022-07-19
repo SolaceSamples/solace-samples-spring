@@ -28,11 +28,5 @@ spring:
               #This adds a topic subscription w/ wildcards to the queue created with a name of TEMPS.Q.SINK above 
               queueAdditionalSubscriptions: sensor/temperature/>
                 
-logging:
-  level:
-    root: INFO
-    com.solacesystems.jcsmp: INFO
-    org.springframework: INFO
-    
 server:
   port: 8093

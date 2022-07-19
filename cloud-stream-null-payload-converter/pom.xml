@@ -5,11 +5,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.solace.samples.spring.scs</groupId>
-	<artifactId>cloud-stream-sink</artifactId>
+	<artifactId>cloud-stream-null-payload-converter</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>cloud-stream-sink</name>
-	<description>Sample sink for Spring Cloud Stream using Solace PubSub+ binder</description>
+	<name>cloud-stream-null-payload-converter</name>
+	<description>Null Payload Handling - Sample for Spring Cloud Stream using Solace PubSub+ binder</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -52,13 +52,11 @@
 			<artifactId>spring-samples-datamodel</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.boot</groupId> -->
-<!-- 			<artifactId>spring-boot-starter-web</artifactId> -->
-<!-- 		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

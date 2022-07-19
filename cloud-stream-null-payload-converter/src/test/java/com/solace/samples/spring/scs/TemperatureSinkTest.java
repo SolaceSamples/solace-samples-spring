@@ -25,12 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import com.solace.samples.spring.common.SensorReading;
-import com.solace.samples.spring.common.SensorReading.BaseUnit;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -39,6 +34,7 @@ public class TemperatureSinkTest {
 	@Autowired
 	private ApplicationContext context;
 
+	@SuppressWarnings("unused")
 	@Test
 	public void testSink() {
 		BeanFactoryChannelResolver channelResolver = context.getBean("integrationChannelResolver",
@@ -52,7 +48,7 @@ public class TemperatureSinkTest {
 		 * 1. Use of Try Me! tool in the PubSub+ Manager tool
 		 * 		Publish events on the topic with empty message content
 		 * 2. Use sdkperf to publish events on the topic with emptry payload
-		 * 		./sdkperf_java.sh -cip="localhost:55555" -ptl "sensor/temperature/99" -mn 1 -mr 1 -md
+		 * 		./sdkperf_java.sh -cip="localhost:55554" -ptl "sensor/temperature/99" -mn 1 -mr 1 -md
 		 */
 	}
 

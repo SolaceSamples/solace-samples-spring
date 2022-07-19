@@ -3,7 +3,6 @@ package com.solace.samples.spring.scs;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.converter.AbstractMessageConverter;
 
-import com.solace.samples.spring.common.SensorReading;
 import com.solace.spring.cloud.stream.binder.messaging.SolaceBinderHeaders;
 
 public class NullSensorReadingConverter extends AbstractMessageConverter {
@@ -20,10 +19,13 @@ public class NullSensorReadingConverter extends AbstractMessageConverter {
 		 * add a custom message converter to handle that scenario to return a message with either a 
 		 * default or custom payload. 
 		 */
-		
 		if ((boolean) message.getHeaders().getOrDefault(SolaceBinderHeaders.NULL_PAYLOAD, false)) {
+	        // Debug message to hint at NULL payload
+			System.out.println("Received NULL payload, returning dummy SensorReading object");
 			return new SensorReading();
 		} else {
+	        // Received a valid non-NULL payload, no further processing required
+			System.out.println("Received a non-NULL payload, returning the object");
 			return super.convertFromInternal(message, targetClass, conversionHint);
 		}
 	}
@@ -38,8 +40,15 @@ public class NullSensorReadingConverter extends AbstractMessageConverter {
 	 * 
 	 * 1. Use of Try Me! tool in the PubSub+ Manager tool
 	 * 		Publish events on the topic with empty message content
-	 * 2. Use sdkperf to publish events on the topic with emptry payload
-	 * 		./sdkperf_java.sh -cip="localhost:55555" -ptl "sensor/temperature/99" -mn 1 -mr 1 -md
+	 * 2. Use sdkperf to publish events on the topic with empty payload
+	 * 		./sdkperf_java.sh -cip="localhost:55554" -ptl "sensor/temperature/99" -mn 1 -mr 1 -md
+	 * 
+	 * To test a valid scenario, publish a a JSON encoded payload
+	 * { "timestamp": 1657542762 , "sensorID": 101, "temperature": 98.3, "baseUnit": "FAHRENHEIT"}
+	 * 
+	 * This should get published as a valid message and should not hit the Dummy POJO generation code.
+	 * 
+
 	 */
 
 }

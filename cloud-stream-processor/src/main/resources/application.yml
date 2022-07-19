@@ -27,11 +27,5 @@ spring:
           convertFtoC-in-0:
             consumer:
               queueAdditionalSubscriptions: sensor/temperature/fahrenheit
-logging:
-  level:
-    root: INFO
-    com.solacesystems.jcsmp: INFO
-    org.springframework: INFO
-    
 server:
   port: 8094

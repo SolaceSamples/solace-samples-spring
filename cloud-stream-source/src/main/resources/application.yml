@@ -21,8 +21,4 @@ spring:
                 clientPassword: default
                 connectRetries: -1
                 reconnectRetries: -1
-logging:
-  level:
-    root: INFO
-    com.solacesystems.jcsmp: INFO
-    org.springframework: INFO
+                

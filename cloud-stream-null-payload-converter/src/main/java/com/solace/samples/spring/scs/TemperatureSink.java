@@ -23,11 +23,8 @@ import java.util.function.Consumer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.stream.annotation.StreamMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.converter.MessageConverter;
-
-import com.solace.samples.spring.common.SensorReading;
 
 @SpringBootApplication
 public class TemperatureSink {
@@ -36,21 +33,11 @@ public class TemperatureSink {
 		SpringApplication.run(TemperatureSink.class, args);
 	}
 
-	/*
-	 *  Check out application.yml to see how to
-	 *  1. Use `concurrency` for multi-threaded consumption
-	 *  2. Use wildcard subscriptions
-	 */
 	@Bean
-	public Consumer<SensorReading> sink(){
+	public Consumer<SensorReading> readTemperature(){
 		return System.out::println;
 	}
 	
-	/*
-	 * Spring Cloud Stream exposes a mechanism to define and register additional MessageConverters. 
-	 * To use it, implement org.springframework.messaging.converter.MessageConverter, and configure it as a @Bean 
-	 * It is then appended to the existing stack of `MessageConverter`s.
-	 */
     @Bean
     public MessageConverter customMessageConverter() {
         return new NullSensorReadingConverter();
