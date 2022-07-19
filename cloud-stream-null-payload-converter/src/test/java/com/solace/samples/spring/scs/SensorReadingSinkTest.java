@@ -29,7 +29,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class TemperatureSinkTest {
+public class SensorReadingSinkTest {
 
 	@Autowired
 	private ApplicationContext context;

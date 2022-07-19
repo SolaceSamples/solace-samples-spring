@@ -27,10 +27,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.converter.MessageConverter;
 
 @SpringBootApplication
-public class TemperatureSink {
+public class SensorReadingSink {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TemperatureSink.class, args);
+		SpringApplication.run(SensorReadingSink.class, args);
 	}
 
 	@Bean
