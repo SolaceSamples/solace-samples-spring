@@ -1,14 +1,16 @@
 spring:
   cloud:
     function:
-      definition: batchPublish
+      definition: batchConsume
     stream:
       bindings:
-        batchPublish-in-0:
-          destination: 'batch/publish/trigger'
-          group: batch
-        batchPublish-out-0:
+        batchConsume-in-0:
           destination: 'batch/consume/topic'
+          group: batch
+          content-type: 'application/octet-stream'
+          consumer:
+            batch-mode: true
+            useNativeDecoding: true
       binders:
         solace-broker:
           type: solace
@@ -22,4 +24,5 @@ spring:
                 connectRetries: -1
                 reconnectRetries: -1
 server:
-  port: 8096
+  port: 8097
+                
