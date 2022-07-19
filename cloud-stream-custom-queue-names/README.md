@@ -28,6 +28,11 @@ The default SpEL expression for creating the consumer group’s queue name is he
 destination.trim().replaceAll('[*>]', '_')
 ```
 
+You can also specify a literal name as the queue name in `queueNameExpression` property. The SpEL expects literal names to be quoted, and the quotes need to be escaped.
+
+```
+queueNameExpression: ‘’’solace/just/a/literal/queuename’’’
+```
 
 ## Running the application
 
@@ -50,5 +55,9 @@ Generated Queue name:
 Generated Error Queue name:
 
 <p align="center"><img width="640" alt="auth" src="images/generated-names-3.jpg"></p>
+
+Generated Literal Queue name (hard-coded):
+
+<p align="center"><img width="640" alt="auth" src="images/generated-names-4.jpg"></p>
 
 🔥 Yes, Now you can name your queue and error queue names as you wish! 🔥
