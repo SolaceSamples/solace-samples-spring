@@ -4,6 +4,11 @@ In general, a received message is automatically acknowledged. This is true wheth
 
 However, you can take charge of the message acknowledgement process and programmatically control the outcome. This would require disabling the auto-acknowledgment and implementing an acknowledgement callback in the Consumer.
 
+Note that Manual acknowledgments do not support application-internal error handling strategies (i.e., retry template, error channel forwarding, etc.). Also, throwing an exception in the message handler will always acknowledge the message in some way regardless if auto-acknowledgment is disabled.
+
+Care should be taken when asynchronously acknowledging messages. Suppose messages aren’t acknowledged promptly. In that case, the message consumption rate will likely stall due to the consumer queue’s configured "Maximum Delivered Unacknowledged Messages per Flow" parameter.
+
+There are three acknowledgment statuses, and the binder will perform the following action. 
 
 | Status  | Action                  |
 |---------|-------------------------|
