@@ -29,17 +29,10 @@ spring:
                 msgVpn: default
                 clientUsername: default
                 clientPassword: default
-                connectRetries: -1
-                reconnectRetries: -1
       solace:
         bindings:
           uppercase-in-0:
             consumer:
-              provisionDurableQueue: true
-              addDestinationAsSubscriptionToQueue: true
-              useGroupNameInQueueName: true
-              useDestinationEncodingInQueueName: false
-              queueNamePrefix: QNAME
               # The queue name will be: CUSTOM-QNAME-wk-myconsumergroup-manualackqueue
               queueNameExpression: >-
                 'CUSTOM-' + (properties.solace.queueNamePrefix?.trim()?.length() > 0 ? properties.solace.queueNamePrefix.trim() + '-' : '') +
@@ -50,11 +43,9 @@ spring:
                 'plain' + '-' : '') + destination.trim().replaceAll('[*>]', '-')
               # The queue name will be: ERROR-QNAME-manualackqueue
               errorQueueNameExpression: '''ERROR-QNAME-'' + destination.trim().replaceAll(''[*>]'', ''-'')'
-              provisionErrorQueue: true
               autoBindErrorQueue: true
           lowercase-in-0:
             consumer:
-              provisionDurableQueue: true
               queueNameExpression: '''solace/just/a/literal/queuename'''
 server:
-  port: 8096
+  port: 8096              

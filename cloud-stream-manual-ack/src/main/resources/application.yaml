@@ -22,17 +22,13 @@ spring:
                 msgVpn: default
                 clientUsername: default
                 clientPassword: default
-                connectRetries: -1
-                reconnectRetries: -1
       solace:
         bindings:
           manualAckFunction-in-0:
             consumer:            
               queueNameExpression: "'EVENTS_QUEUE' + '-' + destination.trim().replaceAll('[*>]', '_')"
-              provisionDurableQueue: true
               errorQueueNameExpression: "'ERROR_QUEUE' + '-' + destination.trim().replaceAll('[*>]', '_')"
-              provisionErrorQueue: true
               autoBindErrorQueue: true
               queueMaxMsgRedelivery: 2
 server:
-  port: 8096
+  port: 8096                              

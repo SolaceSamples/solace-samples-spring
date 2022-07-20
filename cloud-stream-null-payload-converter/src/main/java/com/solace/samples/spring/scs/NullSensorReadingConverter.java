@@ -41,7 +41,7 @@ public class NullSensorReadingConverter extends AbstractMessageConverter {
 	 * 1. Use of Try Me! tool in the PubSub+ Manager tool
 	 * 		Publish events on the topic with empty message content
 	 * 2. Use sdkperf to publish events on the topic with empty payload
-	 * 		./sdkperf_java.sh -cip="localhost:55554" -ptl "sensor/temperature/99" -mn 1 -mr 1 -md
+	 * 		./sdkperf_java.sh -cip="localhost:55555" -ptl "sensor/temperature/99" -mn 1 -mr 1 -md
 	 * 
 	 * To test a valid scenario, publish a a JSON encoded payload
 	 * { "timestamp": 1657542762 , "sensorID": 101, "temperature": 98.3, "baseUnit": "FAHRENHEIT"}

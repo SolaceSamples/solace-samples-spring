@@ -23,7 +23,5 @@ spring:
                 msgVpn: default
                 clientUsername: default
                 clientPassword: default
-                connectRetries: -1
-                reconnectRetries: -1
 server:
-  port: 8082
+  port: 8096                                

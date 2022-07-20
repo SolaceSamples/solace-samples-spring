@@ -7,7 +7,6 @@ spring:
         batchConsume-in-0:
           destination: 'batch/consume/topic'
           group: batch
-          content-type: 'application/octet-stream'
           consumer:
             batch-mode: true
             useNativeDecoding: true
@@ -15,14 +14,11 @@ spring:
         solace-broker:
           type: solace
           environment:
-            solace: # (1)
+            solace:
               java:
                 host: tcp://localhost:55555
                 msgVpn: default
                 clientUsername: default
-                clientPassword: default
-                connectRetries: -1
-                reconnectRetries: -1
+                clientPassword: default                
 server:
-  port: 8097
-                
+  port: 8096                

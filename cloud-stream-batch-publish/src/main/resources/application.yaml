@@ -13,13 +13,11 @@ spring:
         solace-broker:
           type: solace
           environment:
-            solace: # (1)
+            solace:
               java:
                 host: tcp://localhost:55555
                 msgVpn: default
                 clientUsername: default
                 clientPassword: default
-                connectRetries: -1
-                reconnectRetries: -1
 server:
-  port: 8096
+  port: 8095                                

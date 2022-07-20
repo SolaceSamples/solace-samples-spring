@@ -13,7 +13,7 @@ spring:
           environment:
             solace:
               java:
-                host: tcp://localhost:55554
+                host: tcp://localhost:55555
                 msgVpn: default
                 clientUsername: default
                 clientPassword: default
@@ -23,6 +23,5 @@ spring:
             consumer:
               queueAdditionalSubscriptions: sensor/temperature/>
               queueMaxMsgRedelivery: 3
-                
 server:
   port: 8095

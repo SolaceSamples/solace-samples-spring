@@ -23,7 +23,7 @@ public class BatchConsumer {
 	}
 	
 	@Bean
-	Consumer<Message<List<byte[]>>> batchConsume() {
+	Consumer<Message<List<String>>> batchConsume() {
 		return batchMsg -> { // (1)
 			List<?> data = batchMsg.getPayload();
 			MessageHeaders headers = batchMsg.getHeaders();
