@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    function:
+      definition: batchConsume
+    stream:
+      bindings:
+        batchConsume-in-0:
+          destination: 'batch/consume/topic'
+          group: batch
+          consumer:
+            batch-mode: true
+            useNativeDecoding: true
+      binders:
+        solace-broker:
+          type: solace
+          environment:
+            solace:
+              java:
+                host: tcp://localhost:55555
+                msgVpn: default
+                clientUsername: default
+                clientPassword: default                
+server:
+  port: 8096                

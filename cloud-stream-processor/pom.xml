@@ -5,10 +5,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.solace.samples.spring.scs</groupId>
-	<artifactId>cloud-streams-processor</artifactId>
+	<artifactId>cloud-stream-processor</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>cloud-streams-processor</name>
+	<name>cloud-stream-processor</name>
 	<description>Sample processor for Spring Cloud Stream using Solace PubSub+ binder</description>
 
 	<parent>

@@ -1,0 +1,34 @@
+spring:
+  cloud:
+    function:
+      definition: manualAckFunction
+    stream:
+      bindings:
+        manualAckFunction-in-0:
+          destination: 'manual/ack/test'
+          group: clientack
+          consumer:
+            max-attempts: 2
+            concurrency: 2
+        manualAckFunction-out-0:
+          destination: 'manual/ack/result'
+      binders:
+        solace-broker:
+          type: solace
+          environment:
+            solace:
+              java:
+                host: tcp://localhost:55555
+                msgVpn: default
+                clientUsername: default
+                clientPassword: default
+      solace:
+        bindings:
+          manualAckFunction-in-0:
+            consumer:            
+              queueNameExpression: "'EVENTS_QUEUE' + '-' + destination.trim().replaceAll('[*>]', '_')"
+              errorQueueNameExpression: "'ERROR_QUEUE' + '-' + destination.trim().replaceAll('[*>]', '_')"
+              autoBindErrorQueue: true
+              queueMaxMsgRedelivery: 2
+server:
+  port: 8096                              

@@ -1,0 +1,51 @@
+spring:
+  cloud:
+    function:
+      definition: uppercase;lowercase
+    stream:
+      bindings:
+        uppercase-in-0:
+          destination: manualackqueue
+          binder: solace-broker
+          group: myconsumergroup
+          consumer:
+            concurrency: 1
+        uppercase-out-0:
+          destination: uppercase/topic
+          binder: solace-broker
+        lowercase-in-0:
+          destination: lowercase/topic
+          binder: solace-broker
+          group: myconsumergroup
+          consumer:
+            concurrency: 1
+      binders:
+        solace-broker:
+          type: solace
+          environment:
+            solace:
+              java:
+                host: 'tcp://localhost:55555'
+                msgVpn: default
+                clientUsername: default
+                clientPassword: default
+      solace:
+        bindings:
+          uppercase-in-0:
+            consumer:
+              # The queue name will be: CUSTOM-QNAME-wk-myconsumergroup-manualackqueue
+              queueNameExpression: >-
+                'CUSTOM-' + (properties.solace.queueNamePrefix?.trim()?.length() > 0 ? properties.solace.queueNamePrefix.trim() + '-' : '') +
+                (properties.solace.useFamiliarityInQueueName ? (isAnonymous ?
+                'an' : 'wk') + '-' : '') + (isAnonymous ? group?.trim() + '-' :
+                (properties.solace.useGroupNameInQueueName ? group?.trim() + '-'
+                : '')) + (properties.solace.useDestinationEncodingInQueueName ?
+                'plain' + '-' : '') + destination.trim().replaceAll('[*>]', '-')
+              # The queue name will be: ERROR-QNAME-manualackqueue
+              errorQueueNameExpression: '''ERROR-QNAME-'' + destination.trim().replaceAll(''[*>]'', ''-'')'
+              autoBindErrorQueue: true
+          lowercase-in-0:
+            consumer:
+              queueNameExpression: '''solace/just/a/literal/queuename'''
+server:
+  port: 8096              

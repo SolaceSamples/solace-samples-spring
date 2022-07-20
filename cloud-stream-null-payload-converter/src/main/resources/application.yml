@@ -1,0 +1,27 @@
+spring:
+  cloud:
+    function:
+      definition: readTemperature
+    stream:
+      bindings:
+        temperatureSink-in-0:       
+          destination: null_payload_test
+          group: nonexclusive
+      binders:
+        local-solace:
+          type: solace
+          environment:
+            solace:
+              java:
+                host: tcp://localhost:55555
+                msgVpn: default
+                clientUsername: default
+                clientPassword: default
+      solace:
+        bindings:
+          readTemperature-in-0:
+            consumer:
+              queueAdditionalSubscriptions: sensor/temperature/>
+              queueMaxMsgRedelivery: 3
+server:
+  port: 8095

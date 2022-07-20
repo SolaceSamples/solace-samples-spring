@@ -19,10 +19,5 @@ spring:
                 msgVpn: default
                 clientUsername: default
                 clientPassword: default
-                connectRetries: -1
-                reconnectRetries: -1
-logging:
-  level:
-    root: INFO
-    com.solacesystems.jcsmp: INFO
-    org.springframework: INFO
+server:
+  port: 8096                                
