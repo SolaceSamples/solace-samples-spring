@@ -1,10 +1,19 @@
 package com.solace.samples.spring.boot.test.testcontainer;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import reactor.util.retry.Retry;
 
+import java.time.Duration;
+import java.util.Map;
+
+@Slf4j
 public class PubSubPlusContainer extends GenericContainer<PubSubPlusContainer> {
 	private static final String ADMIN_USERNAME = "admin";
 	private static final String ADMIN_PASSWORD = "admin";
@@ -34,5 +43,71 @@ public class PubSubPlusContainer extends GenericContainer<PubSubPlusContainer> {
 				.baseUrl(String.format("http://%s:%s/SEMP/v2", getHost(), getMappedPort(8080)))
 				.defaultHeaders(headers -> headers.setBasicAuth(ADMIN_USERNAME, ADMIN_PASSWORD))
 				.build();
+	}
+
+	public void createQueueWithSubscription(String queueName, String subscription) {
+		log.info("Creating queue {}", queueName);
+		getSempV2WebClient().post()
+				.uri("/config/msgVpns/{msgVpnName}/queues", "default")
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(BodyInserters.fromValue(Map.of(
+						"queueName", queueName,
+						"egressEnabled", true,
+						"ingressEnabled", true,
+						"permission", "consume")))
+				.retrieve()
+				.bodyToMono(String.class)
+				.retryWhen(Retry.fixedDelay(3, Duration.ofSeconds(5)))
+				.doOnError(WebClientResponseException.class,
+						e -> log.error("failed to create queue: {}", e.getResponseBodyAsString(), e))
+				.log()
+				.block();
+
+		log.info("Adding subscription {} to queue {}", subscription, queueName);
+		getSempV2WebClient().post()
+				.uri("/config/msgVpns/{msgVpnName}/queues/{queueName}/subscriptions", "default", queueName)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(BodyInserters.fromValue(Map.of(
+						"subscriptionTopic", subscription)))
+				.retrieve()
+				.bodyToMono(String.class)
+				.retryWhen(Retry.fixedDelay(3, Duration.ofSeconds(5)))
+				.doOnError(WebClientResponseException.class,
+						e -> log.error("failed to create queue: {}", e.getResponseBodyAsString(), e))
+				.log()
+				.block();
+	}
+
+	public void createJndiObject(String objectType, String name, String physicalName) {
+		String jndiPathParam;
+		String refField;
+
+		switch (objectType) {
+			case "queue" -> {
+				jndiPathParam = "jndiQueues";
+				refField = "queueName";
+			}
+			case "topic" -> {
+				jndiPathParam = "jndiTopics";
+				refField = "topicName";
+			}
+			default -> throw new IllegalArgumentException(objectType);
+		}
+
+		log.info("Creating JNDI {} {} for physical {} {}", objectType, name, objectType, physicalName);
+		getSempV2WebClient().post()
+				.uri("/config/msgVpns/{msgVpnName}/{jndiObjectType}", "default", jndiPathParam)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(BodyInserters.fromValue(Map.of(
+						"physicalName", physicalName,
+						refField, name
+				)))
+				.retrieve()
+				.bodyToMono(String.class)
+				.retryWhen(Retry.fixedDelay(3, Duration.ofSeconds(5)))
+				.doOnError(WebClientResponseException.class,
+						e -> log.error("failed to create queue: {}", e.getResponseBodyAsString(), e))
+				.log()
+				.block();
 	}
 }

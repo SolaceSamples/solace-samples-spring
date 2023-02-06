@@ -31,7 +31,7 @@ public class TriggerMessageProcessor {
 			logger.info("trigger message received, initiating an internal order");
 			if (!message.getJMSRedelivered()) {
 				logger.info("trigger message was not redelivered, exception will be thrown");
-				throw new RuntimeException("bum");
+				throw new RuntimeException("trigger rollback");
 			} else {
 				logger.info("message was redelivered, accepting successfully");
 				messageSender.sendOrderMessage(new MyOrder("internal", 500.0d, Instant.now().toEpochMilli()));

@@ -27,7 +27,7 @@ public class RestControllerForOrders implements ErrorController {
 	private final JmsTemplate jmsTemplate;
 
 	@Value("${sample.solace.orders.poll.receive.queue}")
-	private String pollQueue;
+	private String pollDestination;
 
 	public RestControllerForOrders(MessageSender messageSender, JmsTemplate jmsTemplate) {
 		this.messageSender = messageSender;
@@ -53,7 +53,7 @@ public class RestControllerForOrders implements ErrorController {
 	@ResponseBody
 	public String pollOrder() {
 		log.info("Polling order");
-		Message message = jmsTemplate.receive(pollQueue);
+		Message message = jmsTemplate.receive(pollDestination);
 		log.info("Polled message: {}", message);
 		try {
 			return ((TextMessage) Objects.requireNonNull(message)).getText();

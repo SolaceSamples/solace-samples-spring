@@ -7,7 +7,7 @@ import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.jms.Topic;
+import javax.jms.Destination;
 import java.util.Objects;
 
 @Component
@@ -31,13 +31,17 @@ public class MessageSender {
 
 	public void sendTriggerMessage(String message) {
 		logger.info("Sending trigger message {} to {}", message, triggerSendTopic);
-		Topic topic = jmsTemplate.execute(s -> s.createTopic(triggerSendTopic));
-		jmsTemplate.send(Objects.requireNonNull(topic), s -> s.createTextMessage(message));
+		// Forcing destination resolution to use topics
+		Destination destination = jmsTemplate.execute(s -> jmsTemplate.getDestinationResolver()
+				.resolveDestinationName(s, triggerSendTopic, true));
+		jmsTemplate.send(Objects.requireNonNull(destination), s -> s.createTextMessage(message));
 	}
 
 	public void sendOrderMessage(MyOrder message) {
 		logger.info("Sending order message {} to {}", message, orderSendTopic);
-		Topic topic = jmsTemplate.execute(s -> s.createTopic(orderSendTopic));
-		jmsTemplate.convertAndSend(Objects.requireNonNull(topic), message);
+		// Forcing destination resolution to use topics
+		Destination destination = jmsTemplate.execute(s -> jmsTemplate.getDestinationResolver()
+				.resolveDestinationName(s, orderSendTopic, true));
+		jmsTemplate.convertAndSend(Objects.requireNonNull(destination), message);
 	}
 }
