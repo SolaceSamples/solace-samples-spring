@@ -1,43 +1,86 @@
-## Spring Overview
+# Spring Boot 3 - Temporary Workaround for Spring Boot Auto-Configuration for Solace JMS
 
-The Spring Framework is an application framework and inversion of control container for the Java platform. Dating back to the early 2000s the Spring ecosystem has grown tremendously and has become the most popular framework for Enterprise Java Developers. 
+## Disclaimer
 
-- https://spring.io/
-- https://spring.io/projects
+This workaround is for temporary use only. It should not be used in production, but it should be stable enough to use in development.
 
-## Solace PubSub+ Spring
+In regard to the product, Spring Boot Auto-Configuration for the Solace JMS, the workaround shown in this sample is expected to only be compatible with version 4.3.0. There should be no expectation for the workaround to be supported in any future releases of this starter.
 
-At Solace we support integrating our PubSub+ Event Broker with Spring in several different ways to promote the ease of building event driven applications. This repository contains code samples for doing so, but it's best to clone the repo and then follow the step by step tutorials here: [tutorials home page](https://solace.com/samples/solace-samples-spring/)
-* Spring Boot Autoconfigure
-* Spring Cloud Stream
-* Spring Integration (JMS) [Coming soon!]
+Similarly, this workaround was only verified to work with the specific dependencies used in this sample. The workaround might not work if you were to diverge or upgrade these dependencies.
 
-## Access a PubSub+ Service
+## Overview
 
-The Spring Tutorials require that you have access to a PubSub+ Service. You can quickly set one up for FREE by following [these instructions](https://solace.com/try-it-now/)
+The sample in this repository illustrates how to partially downgrade a Spring Boot `3.0.1` application to work with Spring Boot Auto-Configuration for Solace JMS `4.3.0`, which uses Javax JMS. To do this, this sample downgrades JMS-related Spring dependencies to use their previous major versions.
 
-## Contents
+The core of the workaround is as follows:
 
-This repository contains code and matching tutorial walk throughs for different basic scenarios. It is best to view the associated [tutorials home page](https://dev.solace.com/samples/solace-samples-spring/).
+1. Use `spring-boot-starter-parent` parent POM version `3.0.1`
+2. Add `sol-jms` version `10.17.0`
+3. Add `solace-jms-spring-boot-autoconfigure` version `4.3.0` and exclude the following transitive dependencies:
+    * `spring-boot-autoconfigure`
+    * `spring-boot-starter-logging`
+    * `spring-jms`
+    * `spring-boot-configuration-processor`
+4. Add the following downgraded dependencies to your application:
+    * `spring-integration-jms` version `5.5.16`
+    * `spring-jms` version `5.3.24`
+    * `javax.annotation-api` version `1.3.2`
+5. Add the following Spring Boot `3.0.1` dependencies:
+    * `spring-boot-starter` version `3.0.1`
+    * `spring-messaging` version `6.0.3`
+6. Add all other Spring dependencies compatible with Spring Boot version `3.0.1` (`spring-boot-configuration-processor`, `etc).
 
-## Prerequisites
+For a concrete example, [please see this sample's POM file](./spring-boot-autoconfig-receiver/pom.xml).
 
-Install the data model
-``` bash
-cd spring-samples-datamodel
-mvn clean install
-```
+## Running the Sample
 
-## Running the Samples
+This sample will illustrate the functionality of the following features using the downgraded JMS:
 
-To try individual samples, go into the project directory and run the sample using maven.
+* Publishing messages using a `JmsTemplate`.
+* Non-transactional message consumption using `@JmsListener`.
+* Transactional message consumption using `@JmsListener`.
+* (optional) Using a JNDI connection factory and JNDI destinations.
 
-``` bash
-cd cloud-streams-sink
+First, in your PubSub+ broker, provision the following queues and add the following subscriptions as required by the properties of this sample's [application.properties file](./spring-boot-autoconfig-receiver/src/main/resources/application.properties):
+
+| Queue         | Subscription    |
+|---------------|-----------------|
+| `trigger`     | `trigger_topic` |
+| `orders`      | `order_topic`   |
+| `orders_poll` | `order_topic`   |
+
+Optionally, you may use JNDI by uncommenting the `sample.solace.jndi-name` config option. In which case, the `/jms/cf/default` connection will be used, and all queues and topics will be resolved using JNDI.
+
+Now to run the sample, go into the project directory and run the sample using maven:
+
+```shell
+cd spring-boot-autoconfig-receiver
 mvn spring-boot:run
 ```
 
-See the individual tutorials linked from the [tutorials home page](https://dev.solace.com/samples/solace-samples-spring/) for full details which can walk you through the samples, what they do, and how to correctly run them to explore Spring
+To send a message to be consumed by this sample, send the following GET request:
+
+```shell
+curl -X GET localhost:8090/order/send
+```
+
+This sample will then perform the following actions:
+
+1. Send a trigger message to the `trigger_topic` topic.
+    * Because of the `trigger_topic` subscription you added earlier, the PubSub+ broker will route the trigger message to the `trigger` queue.
+2. Transactionally consume the trigger message from the `trigger` queue and throw an exception.
+    * Causes the transaction to rollback and PubSub+ to redeliver the trigger message.
+3. Upon redelivery of the trigger message, the sample will send an order message to the `order_topic` topic, and successfully commits the transaction with the trigger message.
+    * Because of the `order_topic` subscriptions you added earlier, the PubSub+ broker will route the order message to both the `orders` and `orders_poll` queue.
+4. Consumes the order message from the `orders` queue and logs its contents.
+
+Notice that there is still an order message remaining in the `orders_poll` queue. To consume it, send the following GET request:
+
+```shell
+curl -X GET localhost:8090/order/poll
+```
+
+The returned response will contain the order message.
 
 ## Exploring the Samples
 
