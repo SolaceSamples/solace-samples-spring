@@ -49,7 +49,7 @@
         <dependency>
             <groupId>com.solace.spring.boot</groupId>
             <artifactId>solace-jms-spring-boot-autoconfigure</artifactId>
-            <version>4.3.0-SNAPSHOT</version>
+            <version>4.3.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
