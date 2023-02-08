@@ -12,23 +12,90 @@ Similarly, this workaround was only verified to work with the specific dependenc
 
 The sample in this repository illustrates how to partially downgrade a Spring Boot `3.0.1` application to work with Spring Boot Auto-Configuration for Solace JMS `4.3.0`, which uses Javax JMS. To do this, this sample downgrades JMS-related Spring dependencies to use their previous major versions.
 
-The core of the workaround is as follows:
+The core of the workaround involves changes to your POM as follows:
 
-1. Use `spring-boot-starter-parent` parent POM version `3.0.1`
-2. Add `sol-jms` version `10.17.0`
-3. Add `solace-jms-spring-boot-autoconfigure` version `4.3.0` and exclude the following transitive dependencies:
-    * `spring-boot-autoconfigure`
-    * `spring-boot-starter-logging`
-    * `spring-jms`
-    * `spring-boot-configuration-processor`
-4. Add the following downgraded dependencies to your application:
-    * `spring-integration-jms` version `5.5.16`
-    * `spring-jms` version `5.3.24`
-    * `javax.annotation-api` version `1.3.2`
-5. Add the following Spring Boot `3.0.1` dependencies:
-    * `spring-boot-starter` version `3.0.1`
-    * `spring-messaging` version `6.0.3`
-6. Add all other Spring dependencies compatible with Spring Boot version `3.0.1` (`spring-boot-configuration-processor`, `etc).
+```xml
+<parent>
+     <groupId>org.springframework.boot</groupId>
+     <artifactId>spring-boot-starter-parent</artifactId>
+     <version>3.0.1</version>
+     <relativePath/>
+</parent>
+
+<dependencies>
+   <!-- Downgrade Spring Integration JMS -->
+   <dependency>
+      <groupId>org.springframework.integration</groupId>
+      <artifactId>spring-integration-jms</artifactId>
+      <version>5.5.16</version>
+   </dependency>
+
+   <dependency>
+      <groupId>com.solacesystems</groupId>
+      <artifactId>sol-jms</artifactId>
+      <version>10.17.0</version>
+   </dependency>
+
+   <!-- exclude from solace autoconfiguration all incompatible to Spring 6/Springboot 3 artifacts -->
+   <dependency>
+      <groupId>com.solace.spring.boot</groupId>
+      <artifactId>solace-jms-spring-boot-autoconfigure</artifactId>
+      <version>4.3.0</version>
+      <exclusions>
+         <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+         </exclusion>
+      </exclusions>
+   </dependency>
+   
+   <!-- Downgrade Spring JMS -->
+   <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jms</artifactId>
+      <version>5.3.24</version>
+      <scope>compile</scope>
+   </dependency>
+   
+   <!-- add support for javax annotations -->
+   <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <version>1.3.2</version>
+      <scope>compile</scope>
+   </dependency>
+   
+   <!--
+   All remaining dependencies below all uses the dependencies for Spring Boot 3.0.x
+   -->
+   
+   <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <version>3.0.1</version>
+      <scope>compile</scope>
+   </dependency>
+   
+   <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-messaging</artifactId>
+      <version>6.0.3</version>
+      <scope>compile</scope>
+   </dependency>
+</dependencies>
+```
 
 For a concrete example, [please see this sample's POM file](./spring-boot-autoconfig-receiver/pom.xml).
 
