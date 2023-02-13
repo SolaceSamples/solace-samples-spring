@@ -2,7 +2,7 @@
 
 ## Disclaimer
 
-This workaround is for temporary use only. It should not be used in production, but it should be stable enough to use in development.
+This workaround is provided as a temporary solution to allow Solace customers to use Spring Boot 3.x with Solace JMS. As the workaround requires partially downgrading some components of the Spring Boot release (see below), thorough testing should be done to application code relying on this workaround. Solace recommends replacing the workaround in your application once a permanent solution is released.
 
 In regard to the product, Spring Boot Auto-Configuration for the Solace JMS, the workaround shown in this sample is expected to only be compatible with version 4.3.0. There should be no expectation for the workaround to be supported in any future releases of this starter.
 
