@@ -1,40 +1,31 @@
 package com.solace.samples.spring.boot;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.TextMessage;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.jms.annotation.JmsListener;
+import org.springframework.context.annotation.Bean;
+import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
+import org.springframework.jms.support.converter.MessageConverter;
+import org.springframework.jms.support.converter.MessageType;
+
 
 @SpringBootApplication
+@EnableJms
 public class SpringBootReceiver {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SpringBootReceiver.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootReceiver.class, args);
+    }
 
-	@JmsListener(destination = "SpringTestQueue")
-	public void handle(Message message) {
+    public interface Const {
+        String TRIGGER_KEY_WORD = "trigger";
+    }
 
-		Date receiveTime = new Date();
-
-		if (message instanceof TextMessage) {
-			TextMessage tm = (TextMessage) message;
-			try {
-				System.out.println(
-						"Message Received at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(receiveTime)
-								+ " with message content of: " + tm.getText());
-			} catch (JMSException e) {
-				e.printStackTrace();
-			}
-		} else {
-			System.out.println(message.toString());
-		}
-	}
-
+    @Bean
+    public MessageConverter jacksonJmsMessageConverter() {
+        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+        converter.setTargetType(MessageType.TEXT);
+        converter.setTypeIdPropertyName("_type");
+        return converter;
+    }
 }

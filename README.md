@@ -1,43 +1,155 @@
-## Spring Overview
+# Spring Boot 3 - Temporary Workaround for Spring Boot Auto-Configuration for Solace JMS
 
-The Spring Framework is an application framework and inversion of control container for the Java platform. Dating back to the early 2000s the Spring ecosystem has grown tremendously and has become the most popular framework for Enterprise Java Developers. 
+## Disclaimer
 
-- https://spring.io/
-- https://spring.io/projects
+This workaround is provided as a temporary solution to allow Solace customers to use Spring Boot 3.x with Solace JMS. As the workaround requires partially downgrading some components of the Spring Boot release (see below), thorough testing should be done to application code relying on this workaround. Solace recommends replacing the workaround in your application once a permanent solution is released.
 
-## Solace PubSub+ Spring
+In regard to the product, Spring Boot Auto-Configuration for the Solace JMS, the workaround shown in this sample is expected to only be compatible with version 4.3.0. There should be no expectation for the workaround to be supported in any future releases of this starter.
 
-At Solace we support integrating our PubSub+ Event Broker with Spring in several different ways to promote the ease of building event driven applications. This repository contains code samples for doing so, but it's best to clone the repo and then follow the step by step tutorials here: [tutorials home page](https://solace.com/samples/solace-samples-spring/)
-* Spring Boot Autoconfigure
-* Spring Cloud Stream
-* Spring Integration (JMS) [Coming soon!]
+Similarly, this workaround was only verified to work with the specific dependencies used in this sample. The workaround might not work if you were to diverge or upgrade these dependencies.
 
-## Access a PubSub+ Service
+## Overview
 
-The Spring Tutorials require that you have access to a PubSub+ Service. You can quickly set one up for FREE by following [these instructions](https://solace.com/try-it-now/)
+The sample in this repository illustrates how to partially downgrade a Spring Boot `3.0.1` application to work with Spring Boot Auto-Configuration for Solace JMS `4.3.0`, which uses Javax JMS. To do this, this sample downgrades JMS-related Spring dependencies to use their previous major versions.
 
-## Contents
+The core of the workaround involves changes to your POM as follows:
 
-This repository contains code and matching tutorial walk throughs for different basic scenarios. It is best to view the associated [tutorials home page](https://dev.solace.com/samples/solace-samples-spring/).
+```xml
+<parent>
+     <groupId>org.springframework.boot</groupId>
+     <artifactId>spring-boot-starter-parent</artifactId>
+     <version>3.0.1</version>
+     <relativePath/>
+</parent>
 
-## Prerequisites
+<dependencies>
+   <!-- Downgrade Spring Integration JMS -->
+   <dependency>
+      <groupId>org.springframework.integration</groupId>
+      <artifactId>spring-integration-jms</artifactId>
+      <version>5.5.16</version>
+   </dependency>
 
-Install the data model
-``` bash
-cd spring-samples-datamodel
-mvn clean install
+   <dependency>
+      <groupId>com.solacesystems</groupId>
+      <artifactId>sol-jms</artifactId>
+      <version>10.17.0</version>
+   </dependency>
+
+   <!-- exclude from solace autoconfiguration all incompatible to Spring 6/Springboot 3 artifacts -->
+   <dependency>
+      <groupId>com.solace.spring.boot</groupId>
+      <artifactId>solace-jms-spring-boot-autoconfigure</artifactId>
+      <version>4.3.0</version>
+      <exclusions>
+         <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+         </exclusion>
+         <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+         </exclusion>
+      </exclusions>
+   </dependency>
+   
+   <!-- Downgrade Spring JMS -->
+   <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jms</artifactId>
+      <version>5.3.24</version>
+      <scope>compile</scope>
+   </dependency>
+   
+   <!-- add support for javax annotations -->
+   <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <version>1.3.2</version>
+      <scope>compile</scope>
+   </dependency>
+   
+   <!--
+   All remaining dependencies below all uses the dependencies for Spring Boot 3.0.x
+   -->
+   
+   <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <version>3.0.1</version>
+      <scope>compile</scope>
+   </dependency>
+   
+   <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-messaging</artifactId>
+      <version>6.0.3</version>
+      <scope>compile</scope>
+   </dependency>
+</dependencies>
 ```
 
-## Running the Samples
+For a concrete example, [please see this sample's POM file](./spring-boot-autoconfig-receiver/pom.xml).
 
-To try individual samples, go into the project directory and run the sample using maven.
+## Running the Sample
 
-``` bash
-cd cloud-streams-sink
+This sample will illustrate the functionality of the following features using the downgraded JMS:
+
+* Publishing messages using a `JmsTemplate`.
+* Non-transactional message consumption using `@JmsListener`.
+* Transactional message consumption using `@JmsListener`.
+* (optional) Using a JNDI connection factory and JNDI destinations.
+
+First, in your PubSub+ broker, provision the following queues and add the following subscriptions as required by the properties of this sample's [application.properties file](./spring-boot-autoconfig-receiver/src/main/resources/application.properties):
+
+| Queue         | Subscription    |
+|---------------|-----------------|
+| `trigger`     | `trigger_topic` |
+| `orders`      | `order_topic`   |
+| `orders_poll` | `order_topic`   |
+
+Optionally, you may use JNDI by uncommenting the `sample.solace.jndi-name` config option. In which case, the `/jms/cf/default` connection will be used, and all queues and topics will be resolved using JNDI.
+
+Now to run the sample, go into the project directory and run the sample using maven:
+
+```shell
+cd spring-boot-autoconfig-receiver
 mvn spring-boot:run
 ```
 
-See the individual tutorials linked from the [tutorials home page](https://dev.solace.com/samples/solace-samples-spring/) for full details which can walk you through the samples, what they do, and how to correctly run them to explore Spring
+The below curl examples assume the application is running on `localhost:8090`. If you changed these in your `application.properties`, use those values instead.
+
+To send a message to be consumed by this sample, send the following GET request:
+
+```shell
+curl -X GET localhost:8090/order/send
+```
+
+This sample will then perform the following actions:
+
+1. Send a trigger message to the `trigger_topic` topic.
+    * Because of the `trigger_topic` subscription you added earlier, the PubSub+ broker will route the trigger message to the `trigger` queue.
+2. Transactionally consume the trigger message from the `trigger` queue and throw an exception.
+    * Causes the transaction to rollback and PubSub+ to redeliver the trigger message.
+3. Upon redelivery of the trigger message, the sample will send an order message to the `order_topic` topic, and successfully commits the transaction with the trigger message.
+    * Because of the `order_topic` subscriptions you added earlier, the PubSub+ broker will route the order message to both the `orders` and `orders_poll` queue.
+4. Consumes the order message from the `orders` queue and logs its contents.
+
+Notice that there is still an order message remaining in the `orders_poll` queue. To consume it, send the following GET request:
+
+```shell
+curl -X GET localhost:8090/order/poll
+```
+
+The returned response will contain the order message.
 
 ## Exploring the Samples
 
