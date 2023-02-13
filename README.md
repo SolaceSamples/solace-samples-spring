@@ -125,6 +125,8 @@ cd spring-boot-autoconfig-receiver
 mvn spring-boot:run
 ```
 
+The below curl examples assume the application is running on `localhost:8090`. If you changed these in your `application.properties`, use those values instead.
+
 To send a message to be consumed by this sample, send the following GET request:
 
 ```shell
