@@ -7,7 +7,7 @@ import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.jms.Destination;
+import jakarta.jms.Destination;
 import java.util.Objects;
 
 @Component
