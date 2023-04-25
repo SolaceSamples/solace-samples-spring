@@ -6,7 +6,7 @@
 
 	<groupId>com.solace.samples.spring.scs</groupId>
 	<artifactId>cloud-stream-batch-consume</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>cloud-stream-batch-consume</name>
 	<description>Batch Consume Sample for Spring Cloud Stream using Solace PubSub+ binder</description>

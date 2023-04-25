@@ -6,7 +6,7 @@
 
 	<groupId>com.solace.samples.spring.scs</groupId>
 	<artifactId>cloud-stream-function-composition</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>cloud-stream-function-composition</name>
 	<description>Sample function composition for Spring Cloud Stream using Solace PubSub+ binder</description>
 

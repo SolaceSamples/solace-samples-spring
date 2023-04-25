@@ -6,7 +6,7 @@
 
 	<groupId>com.solace.samples.spring.scs</groupId>
 	<artifactId>cloud-stream-custom-queue-names</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>cloud-stream-custom-queue-names</name>
 	<description>Custom Queue Names Sample for Spring Cloud Stream using Solace PubSub+ binder</description>

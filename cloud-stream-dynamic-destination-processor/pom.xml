@@ -6,7 +6,7 @@
 
 	<groupId>com.solace.samples.spring.scs</groupId>
 	<artifactId>cloud-stream-dynamic-destination-processor</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>cloud-stream-dynamic-destination-processor</name>
 	<description>Sample dynamic processor for Spring Cloud Stream using Solace PubSub+ binder</description>
 
