@@ -1,5 +1,7 @@
 spring:
   cloud:
+    function:
+      definition: functionUsingTargetDestHeader;functionUsingStreamBridge;supplierTargetDestination;supplierStreamBridge;receiveAll
     stream:
       function:
         definition: functionUsingTargetDestHeader;functionUsingStreamBridge;supplierTargetDestination;supplierStreamBridge;receiveAll

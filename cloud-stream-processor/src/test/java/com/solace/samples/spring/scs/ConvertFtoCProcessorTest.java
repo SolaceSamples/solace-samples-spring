@@ -23,33 +23,36 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.util.concurrent.TimeUnit;
-
+import com.solace.samples.spring.common.SensorReading;
+import com.solace.samples.spring.common.SensorReading.BaseUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.stream.test.binder.MessageCollector;
-import org.springframework.context.ApplicationContext;
-import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
+import org.springframework.cloud.stream.binder.test.InputDestination;
+import org.springframework.cloud.stream.binder.test.OutputDestination;
+import org.springframework.cloud.stream.binder.test.TestChannelBinderConfiguration;
+import org.springframework.context.annotation.Import;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import com.solace.samples.spring.common.SensorReading;
-import com.solace.samples.spring.common.SensorReading.BaseUnit;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class ConvertFtoCProcessorTest {
-	
+
 	@Autowired
-	private MessageCollector collector;
-	
+	private InputDestination input;
+
 	@Autowired
-	private ApplicationContext context;
+	private OutputDestination output;
+
+	@SpringBootApplication
+	@Import(TestChannelBinderConfiguration.class)
+	public static class TestConfiguration {
+
+	}
 
 	@Test
 	public void testFeaturesProcessor() throws InterruptedException {
@@ -58,23 +61,15 @@ public class ConvertFtoCProcessorTest {
 		SensorReading reading = new SensorReading("test", temperature, BaseUnit.FAHRENHEIT);
 		Message<SensorReading> msgInput = MessageBuilder.withPayload(reading).build();
 
-		BeanFactoryChannelResolver channelResolver = context.getBean("integrationChannelResolver",
-				BeanFactoryChannelResolver.class);
-		MessageChannel input = channelResolver.resolveDestination("convertFtoC-in-0");
-		MessageChannel output = channelResolver.resolveDestination("convertFtoC-out-0");
-		
 		assertNotNull(msgInput.toString());
 		input.send(msgInput);
-		
-		
-		Message<?> msgOutput = (Message<?>) collector.forChannel(output).poll(5, TimeUnit.SECONDS);
-		String payload = (msgOutput != null) ? (String) msgOutput.getPayload() : null;
-		
+
+		final Message<byte[]> msg = output.receive();
+		final String payload = (msg != null) ? new String(msg.getPayload()) : null;
+
 		assertNotNull(payload);
-		assertThat((String) payload,
+		assertThat(payload,
 				allOf(containsString("sensorID"), containsString("temperature"), containsString("baseUnit"),
 						containsString("timestamp"), containsString("CELSIUS"), containsString("21.1")));
-		
 	}
-
 }

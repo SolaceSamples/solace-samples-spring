@@ -51,7 +51,7 @@ public class TemperatureSinkTest {
 		 * 
 		 * 1. Use of Try Me! tool in the PubSub+ Manager tool
 		 * 		Publish events on the topic with empty message content
-		 * 2. Use sdkperf to publish events on the topic with emptry payload
+		 * 2. Use sdkperf to publish events on the topic with empty payload
 		 * 		./sdkperf_java.sh -cip="localhost:55554" -ptl "sensor/temperature/99" -mn 1 -mr 1 -md
 		 */
 	}
