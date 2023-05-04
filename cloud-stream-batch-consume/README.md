@@ -8,7 +8,7 @@ A batch that the binder creates is a collection of individual messages and must 
 
 To run this sample, you will need to have installed:
 
-Java 8 or Above
+Java 17 or Above
 
 ## Code Tour
 
