@@ -6,7 +6,7 @@
 
 	<groupId>com.solace.samples.spring.scs</groupId>
 	<artifactId>cloud-stream-sink</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>cloud-stream-sink</name>
 	<description>Sample sink for Spring Cloud Stream using Solace PubSub+ binder</description>
@@ -14,13 +14,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.4</version>
+		<version>3.0.6</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
-		<spring-cloud.version>2021.0.1</spring-cloud.version>
-		<solace-spring-cloud-bom.version>2.3.0</solace-spring-cloud-bom.version>
+		<spring-cloud.version>2022.0.2</spring-cloud.version>
+		<solace-spring-cloud-bom.version>3.0.0</solace-spring-cloud-bom.version>
 	</properties>
 
 	<dependencyManagement>
@@ -81,6 +81,10 @@
 					<artifactId>android-json</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 	</dependencies>
 

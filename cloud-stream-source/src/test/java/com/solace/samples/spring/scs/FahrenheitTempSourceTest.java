@@ -19,42 +19,45 @@
 
 package com.solace.samples.spring.scs;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
-
-import java.util.concurrent.TimeUnit;
-
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.stream.test.binder.MessageCollector;
+import org.springframework.cloud.stream.binder.test.OutputDestination;
+import org.springframework.cloud.stream.binder.test.TestChannelBinderConfiguration;
 import org.springframework.context.ApplicationContext;
-import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
+import org.springframework.context.annotation.Import;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class FahrenheitTempSourceTest {
 
-	@Autowired
-	private ApplicationContext context;
+  @Autowired
+  private ApplicationContext context;
 
-	@Autowired
-	private MessageCollector collector;
+  @Autowired
+  private OutputDestination output;
 
-	@Test
-	public void testEmitSensorReading() throws Exception {
-		BeanFactoryChannelResolver channelResolver = context.getBean("integrationChannelResolver",
-				BeanFactoryChannelResolver.class);
-		MessageChannel channel = channelResolver.resolveDestination("emitSensorReading-out-0");
-		Message<?> msg = (Message<?>) collector.forChannel(channel).poll(1, TimeUnit.SECONDS);
-		Object payload = (msg != null) ? msg.getPayload() : null;
+  @SpringBootApplication
+  @Import(TestChannelBinderConfiguration.class)
+  public static class TestConfiguration {
 
-		assertThat((String) payload, allOf(containsString("sensorID"), containsString("temperature"),
-				containsString("baseUnit"), containsString("timestamp"), containsString("FAHRENHEIT")));
-	}
+  }
+
+  @Test
+  void testEmitSensorReading() {
+    final Message<byte[]> msg = output.receive();
+    final String payload = (msg != null) ? new String(msg.getPayload()) : null;
+
+    assertNotNull(payload);
+    assertThat(payload, allOf(containsString("sensorID"), containsString("temperature"),
+        containsString("baseUnit"), containsString("timestamp"), containsString("FAHRENHEIT")));
+  }
 }

@@ -1,5 +1,7 @@
 spring:
   cloud:
+    function:
+      definition: preProcess|process|postProcess
     stream:
       function:
         definition: preProcess|process|postProcess

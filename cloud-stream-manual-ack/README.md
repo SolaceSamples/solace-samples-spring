@@ -22,7 +22,7 @@ To demonstrate all the acknowledgement options in action, we will work with `cor
 
 To run this sample, you will need to have installed:
 
-Java 8 or Above
+Java 17 or Above
 
 ## Code Tour
 

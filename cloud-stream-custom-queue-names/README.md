@@ -6,7 +6,7 @@ This Spring Cloud Stream sample will show how to generate custom names for queue
 
 To run this sample, you will need to have installed:
 
-Java 8 or Above
+Java 17 or Above
 
 ## Custom Queue & Error Queue names
 
@@ -16,16 +16,9 @@ The `queueNameExpression` and `errorQueueNameExpression` follow [SpEL](https://d
 
 The default SpEL expression for creating the consumer group’s queue name is here.
 ```
-(properties.solace.queueNamePrefix?.trim()?.length() > 0 ? 
-    properties.solace.queueNamePrefix.trim() + '/' : '') + 
-(properties.solace.useFamiliarityInQueueName ? 
-    (isAnonymous ? 'an' : 'wk') + '/' : '') + 
-(isAnonymous ? group?.trim() + '/' : 
-    (properties.solace.useGroupNameInQueueName ? 
-        group?.trim() + '/' : '')) + 
-(properties.solace.useDestinationEncodingInQueueName ? 
-        'plain' + '/' : '') + 
-destination.trim().replaceAll('[*>]', '_')
+'scst/' + (isAnonymous ? 'an/' : 'wk/') 
++ (group?.trim() + '/') + 'plain/' 
++ destination.trim().replaceAll('[*>]', '_')
 ```
 
 You can also specify a literal name as the queue name in `queueNameExpression` property. The SpEL expects literal names to be quoted, and the quotes need to be escaped.
