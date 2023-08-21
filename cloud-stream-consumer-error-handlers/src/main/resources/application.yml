@@ -1,0 +1,43 @@
+spring:
+  cloud:
+    function:
+      definition: functionOne;functionTwo;binderSpecificErrorHandler;defaultErrorHandler;
+    stream:
+      default:
+        error-handler-definition: defaultErrorHandler
+      bindings:
+        functionOne-in-0:
+          error-handler-definition: binderSpecificErrorHandler
+          destination: solace/function/one
+          group: errorhandler
+          consumer:
+            concurrency: 1
+          binder: solace-broker
+        functionTwo-in-0:
+          destination: solace/function/two
+          group: errorhandler
+          consumer:
+            concurrency: 1
+          binder: solace-broker
+      solace:
+        bindings:
+          functionOne-in-0:
+            consumer:
+              queueNameExpression: '''queueOne'''
+              queueMaxMsgRedelivery: 2
+          functionTwo-in-0:
+            consumer:
+              queueNameExpression: '''queueTwo'''
+              queueMaxMsgRedelivery: 2
+      binders:
+        solace-broker:
+          type: solace
+          environment:
+            solace:
+              java:
+                host: tcp://localhost:55555
+                msgVpn: default
+                clientUsername: default
+                clientPassword: default                
+server:
+  port: 8093
