@@ -22,7 +22,9 @@ When you run `mvn install`, Maven performs the following tasks:
 This allows other projects to include it as a dependency, ensuring that they can use the data model classes without having to include the source code directly. 
 
 
-**NOTE:**==This should be the first step before running any of the projects from this repository.==
+```log
+NOTE: This should be the first step before running any of the projects from this repository.
+```
 
 ### Including the Data Model as a Dependency
 
