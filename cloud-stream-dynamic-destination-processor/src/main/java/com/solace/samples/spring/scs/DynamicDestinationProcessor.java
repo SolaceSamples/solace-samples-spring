@@ -58,6 +58,8 @@ public class DynamicDestinationProcessor {
 			String topic = getMyTopicUsingLogic(input.getPayload());
 			log.info("Processing message: " + input.getPayload());
 			String payload = input.getPayload().concat(" Processed by functionUsingTargetDestHeader");
+      log.info("Setting dynamic target destination to (functionUsingTargetDestHeader): " + topic);
+
 			return MessageBuilder.withPayload(payload).setHeader(BinderHeaders.TARGET_DESTINATION, topic).build();
 		};
 	}
@@ -74,15 +76,16 @@ public class DynamicDestinationProcessor {
 	public Consumer<String> functionUsingStreamBridge(StreamBridge streamBridge) {
 		return input -> {
 			String topic = getMyTopicUsingLogic(input);
-			log.info("Processing message: " + input);
+			log.info("Processing message (functionUsingStreamBridge): " + input);
 			String payload = input.concat(" Processed by functionUsingStreamBridge");
+      log.info("Setting dynamic target destination to (functionUsingStreamBridge): " + topic);
 			streamBridge.send(topic, payload);
 		};
 	}
 
 	private String getMyTopicUsingLogic(String input) {
 		// TODO Use whatever logic you'd like!
-		return "pub/sub/plus/".concat(counter.toString());
+		return "pub/sub/plus/".concat(String.valueOf(counter.incrementAndGet()));
 	}
 
 	// FUNCTIONS BELOW ARE PURELY FOR TESTING
