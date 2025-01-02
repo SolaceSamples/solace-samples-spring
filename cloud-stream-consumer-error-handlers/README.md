@@ -110,11 +110,11 @@ Caused by: java.lang.RuntimeException: Exception thrown
 2023-08-21T16:10:53.835+05:30  INFO 88595 --- [ool-64-thread-1] c.s.s.s.scs.ConsumerErrorHandlerDemo     : Received error message on binder-specific error handler
 ```
 
-### Testing Binder-specific Error Handler
-Publish the trigger message on the topic `solace/function/one` programmatically or using the Publisher tool in the `Try Me!` utility of the Solace Broker console. 
+### Testing Default Error Handler
+Publish the trigger message on the topic `solace/function/two` programmatically or using the Publisher tool in the `Try Me!` utility of the Solace Broker console. 
 
 
-In the terminal, you can see the binder-specific error handler receiving an `ErrorMessage`.
+In the terminal, you can see the default error handler receiving an `ErrorMessage`.
 ```
 2023-08-21T16:15:49.214+05:30  INFO 88595 --- [ool-65-thread-1] c.s.s.s.scs.ConsumerErrorHandlerDemo     : Received message on binding <functionTwo-in-0>: Hello world!
 2023-08-21T16:15:49.215+05:30  WARN 88595 --- [ool-65-thread-1] c.s.s.c.s.b.i.JCSMPInboundChannelAdapter : Failed to consume a message from destination queueTwo - attempt 1
