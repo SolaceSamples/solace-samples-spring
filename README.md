@@ -37,7 +37,9 @@ cd cloud-streams-sink
 mvn spring-boot:run
 ```
 
-See the individual tutorials linked from the [tutorials home page](https://dev.solace.com/samples/solace-samples-spring/) for full details which can walk you through the samples, what they do, and how to correctly run them to explore Spring
+To try running individual samples with distributed tracing enabled you can use the `run.sh` script in the `cloud-stream-processor`, `cloud-stream-sink`, or `cloud-stream-source` projects. 
+* First ensure distributed tracing is enabled on your broker and you have an open telemetry collector setup to receive your traces. More info [in docs](https://docs.solace.com/Features/Distributed-Tracing/Distributed-Tracing-Overview.htm)
+* Then go into the project you'd like to run and execute the `run.sh` script! 
 
 ## Exploring the Samples
 
