@@ -19,7 +19,7 @@ Consumer<Message<List<byte[]>>> batchConsume() {
     return batchMsg -> { // (1)
         List<?> data = batchMsg.getPayload();
         MessageHeaders headers = batchMsg.getHeaders();
-        List<?> dataHeaders = (List<?>) headers.get(SolaceBinderHeaders.BATCHED_HEADERS);
+        List<?> dataHeaders = (List<?>) headers.get(BinderHeaders.BATCH_HEADERS);
 
         log.info("Batch Size: " + data.size());
         for (int i=0; i< data.size(); i++) {
@@ -34,7 +34,7 @@ Consumer<Message<List<byte[]>>> batchConsume() {
 - The Spring Message's header contains a list of headers; we will extract them as a list and traverse the list to get access to individual message headers
 ```
 MessageHeaders headers = batchMsg.getHeaders();
-List<?> dataHeaders = (List<?>) headers.get(SolaceBinderHeaders.BATCHED_HEADERS);
+List<?> dataHeaders = (List<?>) headers.get(BinderHeaders.BATCH_HEADERS);
 ```
 - The Spring Message's payload contains a list of payloads; we will extract them as a list and traverse the list to get access to individual message payloads
 ```

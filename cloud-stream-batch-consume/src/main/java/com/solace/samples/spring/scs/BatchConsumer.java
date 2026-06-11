@@ -8,11 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.stream.binder.BinderHeaders;
 import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
-
-import com.solace.spring.cloud.stream.binder.messaging.SolaceBinderHeaders;
 
 @SpringBootApplication
 public class BatchConsumer {
@@ -27,7 +26,7 @@ public class BatchConsumer {
 		return batchMsg -> { // (1)
 			List<?> data = batchMsg.getPayload();
 			MessageHeaders headers = batchMsg.getHeaders();
-			List<?> dataHeaders = (List<?>) headers.get(SolaceBinderHeaders.BATCHED_HEADERS);
+			List<?> dataHeaders = (List<?>) headers.get(BinderHeaders.BATCH_HEADERS);
 
 			log.info("Batch Size: " + data.size());
 			for (int i=0; i< data.size(); i++) {
